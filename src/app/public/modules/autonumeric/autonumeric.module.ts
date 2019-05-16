@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
-import { AutonumericWrapperDirective } from './autonumeric.directive';
+import { AutonumericDirective } from './autonumeric.directive';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
-    AutonumericWrapperDirective
+    AutonumericDirective
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    AutonumericWrapperDirective
+    AutonumericDirective
   ]
 })
-export class AutonumericWrapperModule { }
+export class AutonumericModule { }

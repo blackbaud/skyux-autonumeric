@@ -7,20 +7,20 @@ import {
   expect
 } from '@skyux-sdk/testing';
 
-import { AutonumericWrapperDirective } from './autonumeric.directive';
+import { AutonumericDirective } from './autonumeric.directive';
 import { AutonumericConfig } from './autonumeric-config';
 
 @Component({
-  selector: 'autonumeric-wrapper-directive-test',
+  selector: 'autonumeric-directive-test',
   template: '<input type="text" autonumeric [autonumericPreset]="preset" [autonumericOptions]="options">'
 })
-export class AutonumericWrapperDirectiveTestComponent {
+export class AutonumericDirectiveTestComponent {
   public preset: string;
   public options: any;
 }
 
-describe('Autonumeric wrapper directive', () => {
-  let fixture: ComponentFixture<AutonumericWrapperDirectiveTestComponent>;
+describe('Autonumeric directive', () => {
+  let fixture: ComponentFixture<AutonumericDirectiveTestComponent>;
   let config: AutonumericConfig;
 
   beforeEach(() => {
@@ -28,8 +28,8 @@ describe('Autonumeric wrapper directive', () => {
 
     TestBed.configureTestingModule({
       declarations: [
-        AutonumericWrapperDirectiveTestComponent,
-        AutonumericWrapperDirective
+        AutonumericDirectiveTestComponent,
+        AutonumericDirective
       ],
       providers: [
         {
@@ -42,15 +42,15 @@ describe('Autonumeric wrapper directive', () => {
 
   it('successfully instantiates autonumeric without a global configuration', () => {
     // tslint:disable-next-line
-    let autonumericDirectiveInstance = new AutonumericWrapperDirective(undefined, null);
+    let autonumericDirectiveInstance = new AutonumericDirective(undefined, null);
     expect((<any> autonumericDirectiveInstance)._globalConfig).toBeDefined();
   });
 
   it('successfully configures the autonumeric instance', () => {
-    fixture = TestBed.createComponent(AutonumericWrapperDirectiveTestComponent);
+    fixture = TestBed.createComponent(AutonumericDirectiveTestComponent);
 
-    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericWrapperDirective));
-    let directiveInstance = testComponentElement.injector.get(AutonumericWrapperDirective);
+    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
+    let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
     spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
     spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
@@ -67,17 +67,17 @@ describe('Autonumeric wrapper directive', () => {
   });
 
   it('successfully configures the autonumeric instance when preset and options attributes are ommitted', async(() => {
-    TestBed.overrideComponent(AutonumericWrapperDirectiveTestComponent, {
+    TestBed.overrideComponent(AutonumericDirectiveTestComponent, {
       set: {
         template: '<input type="text" autonumeric>'
       }
     });
 
     TestBed.compileComponents().then(() => {
-      fixture = TestBed.createComponent(AutonumericWrapperDirectiveTestComponent);
+      fixture = TestBed.createComponent(AutonumericDirectiveTestComponent);
 
-      let testComponentElement = fixture.debugElement.query(By.directive(AutonumericWrapperDirective));
-      let directiveInstance = testComponentElement.injector.get(AutonumericWrapperDirective);
+      let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
+      let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
       spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
       spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
@@ -100,10 +100,10 @@ describe('Autonumeric wrapper directive', () => {
       decimalPlaces: 5
     };
 
-    fixture = TestBed.createComponent(AutonumericWrapperDirectiveTestComponent);
+    fixture = TestBed.createComponent(AutonumericDirectiveTestComponent);
 
-    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericWrapperDirective));
-    let directiveInstance = testComponentElement.injector.get(AutonumericWrapperDirective);
+    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
+    let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
     spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
     spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
@@ -123,15 +123,15 @@ describe('Autonumeric wrapper directive', () => {
   });
 
   it('successfully configures the autonumeric instance with a preset and options from the attribute', () => {
-    fixture = TestBed.createComponent(AutonumericWrapperDirectiveTestComponent);
+    fixture = TestBed.createComponent(AutonumericDirectiveTestComponent);
 
     fixture.componentInstance.preset = 'dollar';
     fixture.componentInstance.options = {
       decimalPlaces: 5
     };
 
-    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericWrapperDirective));
-    let directiveInstance = testComponentElement.injector.get(AutonumericWrapperDirective);
+    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
+    let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
     spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
     spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
@@ -155,13 +155,13 @@ describe('Autonumeric wrapper directive', () => {
       decimalPlaces: 5
     };
 
-    fixture = TestBed.createComponent(AutonumericWrapperDirectiveTestComponent);
+    fixture = TestBed.createComponent(AutonumericDirectiveTestComponent);
     fixture.componentInstance.options = {
       digitGroupSeparator: ','
     };
 
-    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericWrapperDirective));
-    let directiveInstance = testComponentElement.injector.get(AutonumericWrapperDirective);
+    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
+    let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
     spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
     spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
@@ -182,11 +182,11 @@ describe('Autonumeric wrapper directive', () => {
   it('successfully configures the autonumeric instance and overrides the global preset with the preset attribute', () => {
     config.preset = 'dollar';
 
-    fixture = TestBed.createComponent(AutonumericWrapperDirectiveTestComponent);
+    fixture = TestBed.createComponent(AutonumericDirectiveTestComponent);
     fixture.componentInstance.preset = 'euro';
 
-    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericWrapperDirective));
-    let directiveInstance = testComponentElement.injector.get(AutonumericWrapperDirective);
+    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
+    let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
     spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
     spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 

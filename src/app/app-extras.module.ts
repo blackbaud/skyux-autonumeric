@@ -2,15 +2,15 @@ import {
   NgModule
 } from '@angular/core';
 
-import { AutonumericWrapperModule } from './public/library.module';
+import { AutonumericModule } from './public/library.module';
 import { AutonumericConfig } from './public/modules/autonumeric/autonumeric-config';
 
 @NgModule({
   imports: [
-    AutonumericWrapperModule
+    AutonumericModule
   ],
   exports: [
-    AutonumericWrapperModule
+    AutonumericModule
   ],
   providers: [
     {

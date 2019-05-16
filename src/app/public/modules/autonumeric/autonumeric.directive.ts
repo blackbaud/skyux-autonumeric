@@ -5,7 +5,7 @@ let autoNumeric: any = require('autonumeric');
 @Directive({
   selector: '[autonumeric]'
 })
-export class AutonumericWrapperDirective implements OnInit {
+export class AutonumericDirective implements OnInit {
   private _autonumericInstance: any;
 
   @Input() public autonumericPreset: any;

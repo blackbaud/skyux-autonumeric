@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { AutonumericWrapperModule } from './modules/autonumeric';
+import { AutonumericModule } from './modules/autonumeric';
 
 export * from './modules/autonumeric';
 
 @NgModule({
   exports: [
-    AutonumericWrapperModule
+    AutonumericModule
   ]
 })
 export class AutonumericLibraryModule {
