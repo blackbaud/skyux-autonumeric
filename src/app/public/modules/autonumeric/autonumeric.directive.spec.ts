@@ -69,7 +69,7 @@ describe('Autonumeric directive', () => {
   it('successfully configures the autonumeric instance when preset and options attributes are ommitted', async(() => {
     TestBed.overrideComponent(AutonumericDirectiveTestComponent, {
       set: {
-        template: '<input type="text" autonumeric>'
+        template: '<input type="text" skyAutonumeric>'
       }
     });
 
@@ -192,7 +192,7 @@ describe('Autonumeric directive', () => {
 
     fixture.detectChanges();
 
-    expect((<any> directiveInstance)._globalConfig.preset).toBe(config.languagePreset);
+    expect((<any> directiveInstance)._globalConfig.languagePreset).toBe(config.languagePreset);
 
     let presetCall = (<any> directiveInstance.updateAutonumericPreset).calls.mostRecent();
     expect((<any> directiveInstance.updateAutonumericPreset).calls.count()).toBe(1);
