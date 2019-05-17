@@ -2,20 +2,20 @@ import {
   NgModule
 } from '@angular/core';
 
-import { AutonumericModule } from './public/library.module';
-import { AutonumericConfig } from './public/modules/autonumeric/autonumeric-config';
+import { SkyAutonumericModule } from './public/library.module';
+import { SkyAutonumericConfig } from './public/modules/autonumeric/autonumeric-config';
 
 @NgModule({
   imports: [
-    AutonumericModule
+    SkyAutonumericModule
   ],
   exports: [
-    AutonumericModule
+    SkyAutonumericModule
   ],
   providers: [
     {
-      provide: AutonumericConfig,
-      useValue: new AutonumericConfig('dollar', {
+      provide: SkyAutonumericConfig,
+      useValue: new SkyAutonumericConfig('dollar', {
         decimalPlaces: 5
       })
     }

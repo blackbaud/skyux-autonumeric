@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
-import { AutonumericDirective } from './autonumeric.directive';
+import { SkyAutonumericDirective } from './autonumeric.directive';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
-    AutonumericDirective
+    SkyAutonumericDirective
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    AutonumericDirective
+    SkyAutonumericDirective
   ]
 })
-export class AutonumericModule { }
+export class SkyAutonumericModule { }

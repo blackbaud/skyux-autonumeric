@@ -7,8 +7,8 @@ import {
   expect
 } from '@skyux-sdk/testing';
 
-import { AutonumericDirective } from './autonumeric.directive';
-import { AutonumericConfig } from './autonumeric-config';
+import { SkyAutonumericDirective } from './autonumeric.directive';
+import { SkyAutonumericConfig } from './autonumeric-config';
 
 @Component({
   selector: 'autonumeric-directive-test',
@@ -21,19 +21,19 @@ export class AutonumericDirectiveTestComponent {
 
 describe('Autonumeric directive', () => {
   let fixture: ComponentFixture<AutonumericDirectiveTestComponent>;
-  let config: AutonumericConfig;
+  let config: SkyAutonumericConfig;
 
   beforeEach(() => {
-    config = new AutonumericConfig();
+    config = new SkyAutonumericConfig();
 
     TestBed.configureTestingModule({
       declarations: [
         AutonumericDirectiveTestComponent,
-        AutonumericDirective
+        SkyAutonumericDirective
       ],
       providers: [
         {
-          provide: AutonumericConfig,
+          provide: SkyAutonumericConfig,
           useValue: config
         }
       ]
@@ -42,15 +42,15 @@ describe('Autonumeric directive', () => {
 
   it('successfully instantiates autonumeric without a global configuration', () => {
     // tslint:disable-next-line
-    let autonumericDirectiveInstance = new AutonumericDirective(undefined, null);
+    let autonumericDirectiveInstance = new SkyAutonumericDirective(undefined, null);
     expect((<any> autonumericDirectiveInstance)._globalConfig).toBeDefined();
   });
 
   it('successfully configures the autonumeric instance', () => {
     fixture = TestBed.createComponent(AutonumericDirectiveTestComponent);
 
-    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
-    let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
+    let testComponentElement = fixture.debugElement.query(By.directive(SkyAutonumericDirective));
+    let directiveInstance = testComponentElement.injector.get(SkyAutonumericDirective);
     spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
     spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
@@ -76,8 +76,8 @@ describe('Autonumeric directive', () => {
     TestBed.compileComponents().then(() => {
       fixture = TestBed.createComponent(AutonumericDirectiveTestComponent);
 
-      let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
-      let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
+      let testComponentElement = fixture.debugElement.query(By.directive(SkyAutonumericDirective));
+      let directiveInstance = testComponentElement.injector.get(SkyAutonumericDirective);
       spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
       spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
@@ -95,15 +95,15 @@ describe('Autonumeric directive', () => {
   }));
 
   it('successfully configures the autonumeric instance with a global preset and option', () => {
-    config.preset = 'dollar';
+    config.languagePreset = 'dollar';
     config.options = {
       decimalPlaces: 5
     };
 
     fixture = TestBed.createComponent(AutonumericDirectiveTestComponent);
 
-    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
-    let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
+    let testComponentElement = fixture.debugElement.query(By.directive(SkyAutonumericDirective));
+    let directiveInstance = testComponentElement.injector.get(SkyAutonumericDirective);
     spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
     spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
@@ -111,7 +111,7 @@ describe('Autonumeric directive', () => {
 
     let presetCall = (<any> directiveInstance.updateAutonumericPreset).calls.mostRecent();
     expect((<any> directiveInstance.updateAutonumericPreset).calls.count()).toBe(1);
-    expect(presetCall.args[0]).toBe(config.preset);
+    expect(presetCall.args[0]).toBe(config.languagePreset);
 
     let optionsCall = (<any> directiveInstance.updateAutonumericOptions).calls.mostRecent();
     expect((<any> directiveInstance.updateAutonumericOptions).calls.count()).toBe(1);
@@ -130,8 +130,8 @@ describe('Autonumeric directive', () => {
       decimalPlaces: 5
     };
 
-    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
-    let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
+    let testComponentElement = fixture.debugElement.query(By.directive(SkyAutonumericDirective));
+    let directiveInstance = testComponentElement.injector.get(SkyAutonumericDirective);
     spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
     spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
@@ -160,8 +160,8 @@ describe('Autonumeric directive', () => {
       digitGroupSeparator: ','
     };
 
-    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
-    let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
+    let testComponentElement = fixture.debugElement.query(By.directive(SkyAutonumericDirective));
+    let directiveInstance = testComponentElement.injector.get(SkyAutonumericDirective);
     spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
     spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
@@ -180,19 +180,19 @@ describe('Autonumeric directive', () => {
   });
 
   it('successfully configures the autonumeric instance and overrides the global preset with the preset attribute', () => {
-    config.preset = 'dollar';
+    config.languagePreset = 'dollar';
 
     fixture = TestBed.createComponent(AutonumericDirectiveTestComponent);
     fixture.componentInstance.preset = 'euro';
 
-    let testComponentElement = fixture.debugElement.query(By.directive(AutonumericDirective));
-    let directiveInstance = testComponentElement.injector.get(AutonumericDirective);
+    let testComponentElement = fixture.debugElement.query(By.directive(SkyAutonumericDirective));
+    let directiveInstance = testComponentElement.injector.get(SkyAutonumericDirective);
     spyOn(directiveInstance, 'updateAutonumericPreset').and.callThrough();
     spyOn(directiveInstance, 'updateAutonumericOptions').and.callThrough();
 
     fixture.detectChanges();
 
-    expect((<any> directiveInstance)._globalConfig.preset).toBe(config.preset);
+    expect((<any> directiveInstance)._globalConfig.preset).toBe(config.languagePreset);
 
     let presetCall = (<any> directiveInstance.updateAutonumericPreset).calls.mostRecent();
     expect((<any> directiveInstance.updateAutonumericPreset).calls.count()).toBe(1);

@@ -1,27 +1,27 @@
 import { Directive, ElementRef, Input, OnInit, Optional } from '@angular/core';
-import { AutonumericConfig } from './autonumeric-config';
-let autoNumeric: any = require('autonumeric');
+import { SkyAutonumericConfig } from './autonumeric-config';
+const autoNumeric: any = require('autonumeric');
 
 @Directive({
-  selector: '[autonumeric]'
+  selector: '[skyAutonumeric]'
 })
-export class AutonumericDirective implements OnInit {
+export class SkyAutonumericDirective implements OnInit {
   private _autonumericInstance: any;
 
-  @Input() public autonumericPreset: any;
-  @Input() public autonumericOptions: any;
+  @Input() public skyAutonumericLanguagePreset: any;
+  @Input() public skyAutonumericOptions: any;
 
   constructor (
     private _el: ElementRef,
-    @Optional() private _globalConfig: AutonumericConfig
+    @Optional() private _globalConfig: SkyAutonumericConfig
   ) {
-    this._globalConfig = this._globalConfig || new AutonumericConfig();
+    this._globalConfig = this._globalConfig || new SkyAutonumericConfig();
   }
 
   public ngOnInit() {
     this._autonumericInstance = new autoNumeric(this._el.nativeElement);
 
-    let preset = this.autonumericPreset || this._globalConfig.preset;
+    let preset = this.skyAutonumericLanguagePreset || this._globalConfig.languagePreset;
     if (preset) {
       this.updateAutonumericPreset(preset);
     }
@@ -30,8 +30,8 @@ export class AutonumericDirective implements OnInit {
     if (this._globalConfig.options) {
       options = {...this._globalConfig.options};
     }
-    if (this.autonumericOptions) {
-      options = {...options, ...this.autonumericOptions};
+    if (this.skyAutonumericOptions) {
+      options = {...options, ...this.skyAutonumericOptions};
     }
     this.updateAutonumericOptions(options);
   }

@@ -1,6 +1,6 @@
-export class AutonumericConfig {
+export class SkyAutonumericConfig {
   public constructor(
-    public preset?: string,
+    public languagePreset?: string,
     public options?: any
   ) { }
 }

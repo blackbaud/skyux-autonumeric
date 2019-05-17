@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { AutonumericModule } from './modules/autonumeric';
+import { SkyAutonumericModule } from './modules/autonumeric';
 
 export * from './modules/autonumeric';
 
 @NgModule({
   exports: [
-    AutonumericModule
+    SkyAutonumericModule
   ]
 })
 export class AutonumericLibraryModule {
