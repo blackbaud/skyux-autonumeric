@@ -12,7 +12,7 @@ import { SkyAutonumericConfig } from './autonumeric-config';
 
 @Component({
   selector: 'autonumeric-directive-test',
-  template: '<input type="text" autonumeric [autonumericPreset]="preset" [autonumericOptions]="options">'
+  template: '<input type="text" skyAutonumeric [skyAutonumericLanguagePreset]="preset" [skyAutonumericOptions]="options">'
 })
 export class AutonumericDirectiveTestComponent {
   public preset: string;
@@ -42,7 +42,7 @@ describe('Autonumeric directive', () => {
 
   it('successfully instantiates autonumeric without a global configuration', () => {
     // tslint:disable-next-line
-    let autonumericDirectiveInstance = new SkyAutonumericDirective(undefined, null);
+    let autonumericDirectiveInstance = new SkyAutonumericDirective(undefined, undefined, null);
     expect((<any> autonumericDirectiveInstance)._globalConfig).toBeDefined();
   });
 
