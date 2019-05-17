@@ -62,8 +62,8 @@ describe('Autonumeric directive', () => {
     expect((<any> directiveInstance.updateAutonumericOptions).calls.count()).toBe(1);
     expect(Object.keys(optionsCall.args[0]).length).toBe(0);
 
-    expect(directiveInstance.autonumericPreset).toBe(undefined);
-    expect(directiveInstance.autonumericOptions).toBe(undefined);
+    expect(directiveInstance.skyAutonumericLanguagePreset).toBe(undefined);
+    expect(directiveInstance.skyAutonumericOptions).toBe(undefined);
   });
 
   it('successfully configures the autonumeric instance when preset and options attributes are ommitted', async(() => {
@@ -89,8 +89,8 @@ describe('Autonumeric directive', () => {
       expect((<any> directiveInstance.updateAutonumericOptions).calls.count()).toBe(1);
       expect(Object.keys(optionsCall.args[0]).length).toBe(0);
 
-      expect(directiveInstance.autonumericPreset).toBe(undefined);
-      expect(directiveInstance.autonumericOptions).toBe(undefined);
+      expect(directiveInstance.skyAutonumericLanguagePreset).toBe(undefined);
+      expect(directiveInstance.skyAutonumericOptions).toBe(undefined);
     });
   }));
 
@@ -118,8 +118,8 @@ describe('Autonumeric directive', () => {
     expect(Object.keys(optionsCall.args[0]).length).toBe(1);
     expect(optionsCall.args[0].decimalPlaces).toBe(config.options.decimalPlaces);
 
-    expect(directiveInstance.autonumericPreset).toBe(undefined);
-    expect(directiveInstance.autonumericOptions).toBe(undefined);
+    expect(directiveInstance.skyAutonumericLanguagePreset).toBe(undefined);
+    expect(directiveInstance.skyAutonumericOptions).toBe(undefined);
   });
 
   it('successfully configures the autonumeric instance with a preset and options from the attribute', () => {
@@ -146,8 +146,8 @@ describe('Autonumeric directive', () => {
     expect(Object.keys(optionsCall.args[0]).length).toBe(1);
     expect(optionsCall.args[0].decimalPlaces).toBe(fixture.componentInstance.options.decimalPlaces);
 
-    expect(directiveInstance.autonumericPreset).toBe(fixture.componentInstance.preset);
-    expect(directiveInstance.autonumericOptions).toBe(fixture.componentInstance.options);
+    expect(directiveInstance.skyAutonumericLanguagePreset).toBe(fixture.componentInstance.preset);
+    expect(directiveInstance.skyAutonumericOptions).toBe(fixture.componentInstance.options);
   });
 
   it('successfully configures the autonumeric instance with a global preset, global option and adds options from the attribute', () => {
@@ -175,8 +175,8 @@ describe('Autonumeric directive', () => {
     expect(optionsCall.args[0].decimalPlaces).toBe(config.options.decimalPlaces);
     expect(optionsCall.args[0].digitGroupSeparator).toBe(fixture.componentInstance.options.digitGroupSeparator);
 
-    expect(directiveInstance.autonumericPreset).toBe(undefined);
-    expect(directiveInstance.autonumericOptions).toBe(fixture.componentInstance.options);
+    expect(directiveInstance.skyAutonumericLanguagePreset).toBe(undefined);
+    expect(directiveInstance.skyAutonumericOptions).toBe(fixture.componentInstance.options);
   });
 
   it('successfully configures the autonumeric instance and overrides the global preset with the preset attribute', () => {
@@ -202,7 +202,7 @@ describe('Autonumeric directive', () => {
     expect((<any> directiveInstance.updateAutonumericOptions).calls.count()).toBe(1);
     expect(Object.keys(optionsCall.args[0]).length).toBe(0);
 
-    expect(directiveInstance.autonumericPreset).toBe(fixture.componentInstance.preset);
-    expect(directiveInstance.autonumericOptions).toBe(undefined);
+    expect(directiveInstance.skyAutonumericLanguagePreset).toBe(fixture.componentInstance.preset);
+    expect(directiveInstance.skyAutonumericOptions).toBe(undefined);
   });
 });
