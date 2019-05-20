@@ -2,23 +2,27 @@ import {
   NgModule
 } from '@angular/core';
 
-import { SkyAutonumericModule } from './public/library.module';
-import { SkyAutonumericConfig } from './public/modules/autonumeric/autonumeric-config';
+import {
+  SkyAppLinkModule
+} from '@skyux/router';
+
+import {
+  // SkyAutonumericConfig,
+  SkyAutonumericModule
+} from './public';
 
 @NgModule({
-  imports: [
-    SkyAutonumericModule
-  ],
   exports: [
+    SkyAppLinkModule,
     SkyAutonumericModule
   ],
   providers: [
-    {
-      provide: SkyAutonumericConfig,
-      useValue: new SkyAutonumericConfig('dollar', {
-        decimalPlaces: 5
-      })
-    }
+    // {
+    //   provide: SkyAutonumericConfig,
+    //   useValue: new SkyAutonumericConfig('French', {
+    //     decimalPlaces: 5
+    //   })
+    // }
   ]
 })
 export class AppExtrasModule { }

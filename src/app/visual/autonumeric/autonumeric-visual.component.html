@@ -1,0 +1,27 @@
+<form
+  [formGroup]="formGroup"
+  novalidate
+>
+  <input
+    class="sky-form-control"
+    formControlName="donationAmount"
+    type="text"
+    skyAutonumeric
+  />
+</form>
+
+<button
+  class="sky-btn"
+  type="button"
+  (click)="setValue()"
+>
+  Set value
+</button>
+
+<button
+  class="sky-btn"
+  type="button"
+  (click)="clearValue()"
+>
+  Clear value
+</button>

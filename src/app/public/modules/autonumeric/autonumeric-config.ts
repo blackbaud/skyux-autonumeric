@@ -1,6 +1,11 @@
+import {
+  Injectable
+} from '@angular/core';
+
+@Injectable()
 export class SkyAutonumericConfig {
-  public constructor(
+  constructor(
     public languagePreset?: string,
-    public options?: any
+    public autonumericOptions?: any
   ) { }
 }
