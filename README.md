@@ -32,7 +32,7 @@ This is not required.
 providers: [
     {
       provide: SkyAutonumericConfig,
-      useValue: new SkyAutonumericConfig('dollar', {
+      useValue: new SkyAutonumericConfig('English', {
         decimalPlaces: 5
       })
     }
