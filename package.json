@@ -1,6 +1,6 @@
 {
   "name": "@skyux/autonumeric",
-  "version": "0.0.1",
+  "version": "3.0.0-beta.0",
   "description": "Library for skyux-lib-autonumeric",
   "main": "bundles/bundle.umd.js",
   "module": "index.ts",
@@ -21,7 +21,11 @@
     "type": "git",
     "url": ""
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "@angular/common": ">=4.3.6",
+    "@angular/core": ">=4.3.6",
+    "@angular/forms": ">=4.3.6"
+  },
   "dependencies": {
     "autonumeric": "4.5.4"
   },
@@ -41,6 +45,7 @@
     "@pact-foundation/pact": "7.4.0",
     "@pact-foundation/pact-web": "7.4.0",
     "@skyux-sdk/builder": "3.6.6",
+    "@skyux-sdk/builder-plugin-skyux": "1.0.0",
     "@skyux-sdk/pact": "3.2.0",
     "@skyux-sdk/testing": "3.1.0",
     "@skyux/assets": "3.0.0",
@@ -61,6 +66,6 @@
     "ts-node": "8.1.0",
     "tslint": "5.16.0",
     "typescript": "3.2.4",
-    "zone.js": "0.8.28"
+    "zone.js": "0.8.29"
   }
 }

@@ -7,8 +7,8 @@ import {
 } from '@skyux/router';
 
 import {
-  // SkyAutonumericConfig,
-  SkyAutonumericModule, SkyAutonumericConfig
+  SkyAutonumericConfig,
+  SkyAutonumericModule
 } from './public';
 
 @NgModule({
