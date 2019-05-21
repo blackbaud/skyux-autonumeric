@@ -67,7 +67,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor {
   }
 
   private get autonumericOptions(): any {
-    return this._autonumericOptions;
+    return this._autonumericOptions || autoNumeric.getPredefinedOptions()['English'];
   }
 
   private get languagePreset(): string {
@@ -110,16 +110,17 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor {
   }
 
   public ngOnInit(): void {
-    console.log('CONFIG?', this.languagePreset, this.autonumericOptions);
-    // setTimeout(() => {
-      this.updateAutonumericPreset(this.languagePreset);
-      this.autonumericInstance.update(this.autonumericOptions);
-    // });
+    this.updateAutonumericPreset(this.languagePreset);
+    this.autonumericInstance.update(this.autonumericOptions);
   }
 
   public writeValue(value: number) {
     this.value = value;
-    this.autonumericInstance.set(value);
+    if (value) {
+      this.autonumericInstance.set(value);
+    } else {
+      this.autonumericInstance.clear();
+    }
   }
 
   public validate(control: AbstractControl): ValidationErrors {

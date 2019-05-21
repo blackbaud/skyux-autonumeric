@@ -7,7 +7,6 @@ import {
 } from '@skyux/router';
 
 import {
-  SkyAutonumericConfig,
   SkyAutonumericModule
 } from './public';
 
@@ -15,14 +14,6 @@ import {
   exports: [
     SkyAppLinkModule,
     SkyAutonumericModule
-  ],
-  providers: [
-    {
-      provide: SkyAutonumericConfig,
-      useValue: new SkyAutonumericConfig('French', {
-        decimalPlaces: 5
-      })
-    }
   ]
 })
 export class AppExtrasModule { }

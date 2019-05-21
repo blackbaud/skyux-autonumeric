@@ -1,16 +1,30 @@
 import {
-  Component, OnInit
+  Component, OnInit, ChangeDetectionStrategy
 } from '@angular/core';
 
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+// import { SkyAutonumericConfig } from '../../public';
 
 @Component({
   selector: 'autonumeric-visual',
-  templateUrl: './autonumeric-visual.component.html'
+  templateUrl: './autonumeric-visual.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    // {
+    //   provide: SkyAutonumericConfig,
+    //   useValue: new SkyAutonumericConfig('French', {
+    //     decimalPlaces: 5
+    //   })
+    // }
+  ]
 })
 export class AutonumericVisualComponent implements OnInit {
 
+  public autonumericOptions: any;
+
   public formGroup: FormGroup;
+
+  public languagePreset: string;
 
   constructor(
     private formBuilder: FormBuilder
@@ -22,7 +36,7 @@ export class AutonumericVisualComponent implements OnInit {
     });
 
     this.formGroup.get('donationAmount').valueChanges.subscribe((value) => {
-      console.log('Value?', value);
+      console.log('Value changed:', value);
     });
   }
 
@@ -32,5 +46,15 @@ export class AutonumericVisualComponent implements OnInit {
 
   public clearValue(): void {
     this.formGroup.get('donationAmount').reset();
+  }
+
+  public setLanguagePreset(): void {
+    this.languagePreset = 'Chinese';
+  }
+
+  public setOptions(): void {
+    this.autonumericOptions = {
+      decimalPlaces: 9
+    };
   }
 }

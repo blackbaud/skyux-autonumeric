@@ -5,7 +5,7 @@ import {
 @Injectable()
 export class SkyAutonumericConfig {
   constructor(
-    public languagePreset?: string,
+    public languagePreset: string,
     public autonumericOptions?: any
   ) { }
 }
