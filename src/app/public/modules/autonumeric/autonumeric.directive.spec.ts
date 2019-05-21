@@ -1,4 +1,5 @@
 import {
+  async,
   ComponentFixture,
   fakeAsync,
   TestBed,
@@ -6,12 +7,17 @@ import {
 } from '@angular/core/testing';
 
 import {
-  expect
-} from '@skyux-sdk/testing';
+  AbstractControl
+} from '@angular/forms';
 
 import {
-  SkyAutonumericConfig
-} from './autonumeric-config';
+  expect,
+  SkyAppTestUtility
+} from '@skyux-sdk/testing';
+
+// import {
+//   SkyAutonumericOptionsProvider
+// } from './autonumeric-options-provider';
 
 import {
   AutonumericFixtureComponent
@@ -21,10 +27,13 @@ import {
   AutonumericFixtureModule
 } from './fixtures/autonumeric.module.fixture';
 
+import {
+  SkyAutonumericOptions
+} from './autonumeric-options';
+
 describe('Autonumeric directive', () => {
   let fixture: ComponentFixture<AutonumericFixtureComponent>;
   // let autonumericConfigFactory: () => void;
-  let config: SkyAutonumericConfig;
 
   function detectChanges(): void {
     fixture.detectChanges();
@@ -35,6 +44,10 @@ describe('Autonumeric directive', () => {
     fixture.componentInstance.formGroup.get('donationAmount').setValue(value);
   }
 
+  function setOptions(options: SkyAutonumericOptions): void {
+    fixture.componentInstance.autonumericOptions = options;
+  }
+
   function getFormattedValue(): string {
     return fixture.nativeElement.querySelector('input').value;
   }
@@ -43,20 +56,35 @@ describe('Autonumeric directive', () => {
     return fixture.componentInstance.formControl.value;
   }
 
+  function verifyFormControlStatuses(
+    control: AbstractControl,
+    pristine: boolean,
+    touched: boolean,
+    valid: boolean
+  ): void {
+    expect(control.pristine).toEqual(pristine);
+    expect(control.touched).toEqual(touched);
+    expect(control.valid).toEqual(valid);
+  }
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         AutonumericFixtureModule
-      ],
-      providers: [
-        {
-          provide: SkyAutonumericConfig,
-          useValue: config
-        }
       ]
+      // providers: [
+      //   {
+      //     provide: SkyAutonumericConfig,
+      //     useValue: config
+      //   }
+      // ]
     });
 
     fixture = TestBed.createComponent(AutonumericFixtureComponent);
+  });
+
+  afterEach(() => {
+    fixture.destroy();
   });
 
   it('should use default configuration', fakeAsync(() => {
@@ -73,8 +101,24 @@ describe('Autonumeric directive', () => {
     expect(formattedValue).toEqual('1,000.00');
   }));
 
-  it('should support custom global configuration', fakeAsync(() => {
-    config = new SkyAutonumericConfig('French', {
+  it('should support preset configuration', fakeAsync(() => {
+    setOptions('dollar');
+
+    detectChanges();
+
+    setValue(1000);
+
+    detectChanges();
+
+    const modelValue = getModelValue();
+    const formattedValue = getFormattedValue();
+
+    expect(modelValue).toEqual(1000);
+    expect(formattedValue).toEqual('$1,000.00');
+  }));
+
+  it('should support custom configuration', fakeAsync(() => {
+    setOptions({
       decimalPlaces: 5
     });
 
@@ -88,27 +132,106 @@ describe('Autonumeric directive', () => {
     const formattedValue = getFormattedValue();
 
     expect(modelValue).toEqual(1000);
-    expect(formattedValue).toEqual('1,000.00');
+    expect(formattedValue).toEqual('1,000.00000');
   }));
 
-  it('should set correct statuses when initialized without value', fakeAsync(() => {
+  it('should update numeric value on blur', fakeAsync(() => {
     detectChanges();
-    expect(fixture.componentInstance.formControl.touched).toEqual(false);
-    expect(fixture.componentInstance.formControl.pristine).toEqual(true);
-    expect(fixture.componentInstance.formControl.valid).toEqual(true);
+
+    const autonumericInstance = fixture.componentInstance.autonumericDirective['autonumericInstance'];
+    const spy = spyOn(autonumericInstance, 'getNumber').and.callThrough();
+
+    const input = fixture.nativeElement.querySelector('input');
+
+    SkyAppTestUtility.fireDomEvent(input, 'blur');
+    detectChanges();
+
+    expect(spy).toHaveBeenCalled();
   }));
 
-  it('should set correct statuses when initialized with a value', fakeAsync(() => {
-    detectChanges();
+  it('should be accessible', async(() => {
+    fixture.detectChanges();
 
     setValue(1000);
 
-    detectChanges();
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.formControl.touched).toEqual(false);
-    expect(fixture.componentInstance.formControl.pristine).toEqual(true);
-    expect(fixture.componentInstance.formControl.valid).toEqual(true);
+    fixture.whenStable().then(() => {
+      expect(fixture.nativeElement).toBeAccessible();
+    });
   }));
+
+  // it('should support custom global configuration', fakeAsync(() => {
+  //   config = new SkyAutonumericConfig('French', {
+  //     decimalPlaces: 5
+  //   });
+
+  //   detectChanges();
+
+  //   setValue(1000);
+
+  //   detectChanges();
+
+  //   const modelValue = getModelValue();
+  //   const formattedValue = getFormattedValue();
+
+  //   expect(modelValue).toEqual(1000);
+  //   expect(formattedValue).toEqual('1,000.00');
+  // }));
+
+  describe('Angular form control statuses', () => {
+
+    it('should set correct statuses when initialized without value', fakeAsync(() => {
+      detectChanges();
+
+      verifyFormControlStatuses(
+        fixture.componentInstance.formControl,
+        true,
+        false,
+        true
+      );
+    }));
+
+    it('should set correct statuses when initialized with a value', fakeAsync(() => {
+      detectChanges();
+
+      setValue(1000);
+
+      detectChanges();
+
+      verifyFormControlStatuses(
+        fixture.componentInstance.formControl,
+        true,
+        false,
+        true
+      );
+    }));
+
+    it('should mark the control as touched on blur', fakeAsync(() => {
+      detectChanges();
+
+      expect(fixture.componentInstance.formControl.touched).toEqual(false);
+
+      SkyAppTestUtility.fireDomEvent(fixture.nativeElement.querySelector('input'), 'blur');
+
+      detectChanges();
+
+      expect(fixture.componentInstance.formControl.touched).toEqual(true);
+    }));
+
+    it('should mark the control as dirty on keyup', fakeAsync(() => {
+      detectChanges();
+
+      expect(fixture.componentInstance.formControl.dirty).toEqual(false);
+
+      SkyAppTestUtility.fireDomEvent(fixture.nativeElement.querySelector('input'), 'keyup');
+
+      detectChanges();
+
+      expect(fixture.componentInstance.formControl.dirty).toEqual(true);
+    }));
+
+  });
 
   // fit('successfully configures the autonumeric instance', () => {
   //   fixture = TestBed.createComponent(AutonumericFixtureComponent);

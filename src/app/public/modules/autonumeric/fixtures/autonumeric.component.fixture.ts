@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   OnInit,
   ViewChild
@@ -15,9 +16,14 @@ import {
   SkyAutonumericDirective
 } from '../autonumeric.directive';
 
+import {
+  SkyAutonumericOptions
+} from '../autonumeric-options';
+
 @Component({
   selector: 'autonumeric-directive-test',
-  templateUrl: './autonumeric.component.fixture.html'
+  templateUrl: './autonumeric.component.fixture.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutonumericFixtureComponent implements OnInit {
 
@@ -26,9 +32,7 @@ export class AutonumericFixtureComponent implements OnInit {
 
   public formGroup: FormGroup;
 
-  public languagePreset: string;
-
-  public autonumericOptions: any;
+  public autonumericOptions: SkyAutonumericOptions;
 
   public get formControl(): AbstractControl {
     return this.formGroup.get('donationAmount');

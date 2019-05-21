@@ -3,13 +3,17 @@ import {
 } from '@angular/core';
 
 import {
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
+
+import {
   SkyAutonumericModule
 } from '../autonumeric.module';
 
 import {
   AutonumericFixtureComponent
 } from './autonumeric.component.fixture';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [

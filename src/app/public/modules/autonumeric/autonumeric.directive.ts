@@ -1,24 +1,29 @@
 import {
   Directive,
-  ElementRef,
   Input,
-  OnInit,
-  Optional,
   forwardRef,
+  ElementRef,
+  Optional,
+  OnInit,
   HostListener
 } from '@angular/core';
 
 import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
   AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
   ValidationErrors,
-  NG_VALIDATORS
+  Validator
 } from '@angular/forms';
 
 import {
-  SkyAutonumericConfig
-} from './autonumeric-config';
+  SkyAutonumericOptions
+} from './autonumeric-options';
+
+import {
+  SkyAutonumericOptionsProvider
+} from './autonumeric-options-provider';
 
 const autoNumeric: any = require('autonumeric');
 
@@ -37,85 +42,39 @@ const SKY_AUTONUMERIC_VALIDATOR = {
 // tslint:enable
 
 @Directive({
-  selector: '[skyAutonumeric]',
+  selector: 'input[skyAutonumeric]',
   providers: [
     SKY_AUTONUMERIC_VALUE_ACCESSOR,
     SKY_AUTONUMERIC_VALIDATOR
   ]
 })
-export class SkyAutonumericDirective implements OnInit, ControlValueAccessor {
+export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Validator {
 
   @Input()
-  public set skyAutonumericLanguagePreset(value: string) {
-    this.updateAutonumericPreset(value);
-  }
-
-  @Input()
-  public set skyAutonumericOptions(value: any) {
-    this.autonumericOptions = value;
-  }
-
-  private set autonumericOptions(value: any) {
-    this._autonumericOptions = Object.assign(
-      {},
-      this.globalConfig && this.globalConfig.autonumericOptions,
-      this.skyAutonumericOptions,
-      value
-    );
-
-    this.autonumericInstance.update(this._autonumericOptions);
-  }
-
-  private get autonumericOptions(): any {
-    return this._autonumericOptions || autoNumeric.getPredefinedOptions()['English'];
-  }
-
-  private get languagePreset(): string {
-    return (
-      this.globalConfig &&
-      this.globalConfig.languagePreset
-     ) || this.skyAutonumericLanguagePreset;
-  }
-
-  private set value(value: number) {
-    if (this._value !== value) {
-      this._value = value;
-
-      this.onChange(value);
-
-      // Do not mark the field as "dirty" if the field
-      // has been initialized with a value.
-      if (this.isFirstChange && this.control) {
-        this.control.markAsPristine();
-      }
-
-      if (this.isFirstChange && this._value) {
-        this.isFirstChange = false;
-      }
-    }
+  public set skyAutonumeric(value: SkyAutonumericOptions) {
+    this.autonumericOptions = this.mergeOptions(value);
+    this.updateAutonumericInstance();
   }
 
   private autonumericInstance: any;
+  private autonumericOptions: SkyAutonumericOptions;
   private control: AbstractControl;
-  private isFirstChange = true;
-
-  private _value: number;
-  private _autonumericOptions: any;
+  private value: number;
 
   constructor (
     private elementRef: ElementRef,
-    @Optional() private globalConfig: SkyAutonumericConfig
+    @Optional() private globalConfig: SkyAutonumericOptionsProvider
   ) {
-    this.autonumericInstance = new autoNumeric(this.elementRef.nativeElement);
+    this.createAutonumericInstance();
   }
 
   public ngOnInit(): void {
-    this.updateAutonumericPreset(this.languagePreset);
-    this.autonumericInstance.update(this.autonumericOptions);
+    this.updateAutonumericInstance();
   }
 
-  public writeValue(value: number) {
+  public writeValue(value: number): void {
     this.value = value;
+
     if (value) {
       this.autonumericInstance.set(value);
     } else {
@@ -131,7 +90,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor {
     return;
   }
 
-  public registerOnChange(fn: (value: any) => void): void {
+  public registerOnChange(fn: (value: number) => void): void {
     this.onChange = fn;
   }
 
@@ -141,19 +100,50 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor {
 
   @HostListener('blur')
   public onBlur(): void {
+    const numericValue = this.autonumericInstance.getNumber();
+
+    /* istanbul ignore else */
+    if (this.value !== numericValue) {
+      this.value = numericValue;
+      this.onChange(numericValue);
+    }
+
     this.onTouched();
   }
 
   @HostListener('keyup')
   public onKeyUp(): void {
-    this.value = this.autonumericInstance.getNumber();
+    this.control.markAsDirty();
   }
 
-  private updateAutonumericPreset(preset: string): void {
-    const options = autoNumeric.getPredefinedOptions();
-    this.autonumericInstance.update(options[preset]);
+  private createAutonumericInstance(): void {
+    this.autonumericInstance = new autoNumeric(this.elementRef.nativeElement);
   }
 
-  private onChange = (_: any) => {};
+  private updateAutonumericInstance(): void {
+    this.autonumericInstance.update(this.autonumericOptions);
+  }
+
+  private mergeOptions(value: SkyAutonumericOptions): SkyAutonumericOptions {
+    const globalOptions = this.globalConfig.getConfig();
+
+    let newOptions: SkyAutonumericOptions = {};
+    if (typeof value === 'string') {
+      const predefinedOptions = autoNumeric.getPredefinedOptions();
+      newOptions = predefinedOptions[value];
+    } else {
+      newOptions = value;
+    }
+
+    return Object.assign(
+      {},
+      globalOptions,
+      newOptions
+    );
+  }
+
+  /* istanbul ignore next */
+  private onChange = (_: number) => {};
+  /* istanbul ignore next */
   private onTouched = () => {};
 }

@@ -1,7 +1,23 @@
-import { NgModule } from '@angular/core';
-import { SkyAutonumericDirective } from './autonumeric.directive';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  NgModule
+} from '@angular/core';
+
+import {
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
+
+import {
+  SkyAutonumericDirective
+} from './autonumeric.directive';
+
+import {
+  SkyAutonumericOptionsProvider
+} from './autonumeric-options-provider';
 
 @NgModule({
   declarations: [
@@ -14,6 +30,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   ],
   exports: [
     SkyAutonumericDirective
+  ],
+  providers: [
+    SkyAutonumericOptionsProvider
   ]
 })
 export class SkyAutonumericModule { }

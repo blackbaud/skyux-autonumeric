@@ -1,30 +1,59 @@
 import {
-  Component, OnInit, ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-// import { SkyAutonumericConfig } from '../../public';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup
+} from '@angular/forms';
+
+import {
+  Subject
+} from 'rxjs';
+
+import {
+  takeUntil
+} from 'rxjs/operators';
+
+import {
+  SkyAutonumericOptions,
+  SkyAutonumericOptionsProvider
+} from '../../public';
+
+export class MyAutonumericOptionsProvider extends SkyAutonumericOptionsProvider {
+  constructor() {
+    super();
+  }
+
+  public getConfig(): SkyAutonumericOptions {
+    return {
+      decimalPlaces: 5
+    };
+  }
+}
 
 @Component({
   selector: 'autonumeric-visual',
   templateUrl: './autonumeric-visual.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    // {
-    //   provide: SkyAutonumericConfig,
-    //   useValue: new SkyAutonumericConfig('French', {
-    //     decimalPlaces: 5
-    //   })
-    // }
+    {
+      provide: SkyAutonumericOptionsProvider,
+      useClass: MyAutonumericOptionsProvider
+    }
   ]
 })
-export class AutonumericVisualComponent implements OnInit {
+export class AutonumericVisualComponent implements OnInit, OnDestroy {
 
-  public autonumericOptions: any;
+  public autonumericOptions: SkyAutonumericOptions;
 
   public formGroup: FormGroup;
 
-  public languagePreset: string;
+  private ngUnsubscribe = new Subject<void>();
 
   constructor(
     private formBuilder: FormBuilder
@@ -35,26 +64,37 @@ export class AutonumericVisualComponent implements OnInit {
       donationAmount: new FormControl(1000)
     });
 
-    this.formGroup.get('donationAmount').valueChanges.subscribe((value) => {
-      console.log('Value changed:', value);
-    });
+    this.formGroup.get('donationAmount').valueChanges
+      .pipe(
+        takeUntil(this.ngUnsubscribe)
+      )
+      .subscribe((value) => {
+        console.log('Value changed:', value);
+      });
+  }
+
+  public ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   public setValue(): void {
-    this.formGroup.get('donationAmount').setValue(3756.8);
+    this.formGroup.setValue({
+      donationAmount: 3756.8
+    });
   }
 
   public clearValue(): void {
-    this.formGroup.get('donationAmount').reset();
-  }
-
-  public setLanguagePreset(): void {
-    this.languagePreset = 'Chinese';
+    this.formGroup.reset();
   }
 
   public setOptions(): void {
     this.autonumericOptions = {
       decimalPlaces: 9
     };
+  }
+
+  public setOptionsByPreset(): void {
+    this.autonumericOptions = 'Chinese';
   }
 }

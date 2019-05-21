@@ -3,11 +3,11 @@
   novalidate
 >
   <input
+    aria-label="Donation amount"
     class="sky-form-control"
     formControlName="donationAmount"
+    name="donationAmount"
     type="text"
-    skyAutonumeric
-    [skyAutonumericLanguagePreset]="languagePreset"
-    [skyAutonumericOptions]="autonumericOptions"
+    [skyAutonumeric]="autonumericOptions"
   />
 </form>

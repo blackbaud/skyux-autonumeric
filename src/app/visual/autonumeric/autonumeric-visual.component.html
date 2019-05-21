@@ -7,11 +7,13 @@
       class="sky-form-control"
       formControlName="donationAmount"
       type="text"
-      skyAutonumeric
-      [skyAutonumericLanguagePreset]="languagePreset"
-      [skyAutonumericOptions]="autonumericOptions"
+      [skyAutonumeric]="autonumericOptions"
     />
   </form>
+
+  <pre>Pristine: {{formGroup.controls.donationAmount.pristine}}</pre>
+  <pre>Touched: {{formGroup.controls.donationAmount.touched}}</pre>
+  <pre>Valid: {{formGroup.controls.donationAmount.valid}}</pre>
 
   <button
     class="sky-btn"
@@ -32,7 +34,7 @@
   <button
     class="sky-btn"
     type="button"
-    (click)="setLanguagePreset()"
+    (click)="setOptionsByPreset()"
   >
     Set language preset
   </button>
