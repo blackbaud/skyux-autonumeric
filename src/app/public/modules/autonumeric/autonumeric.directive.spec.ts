@@ -23,7 +23,7 @@ import {
 
 describe('Autonumeric directive', () => {
   let fixture: ComponentFixture<AutonumericFixtureComponent>;
-  let autonumericConfigFactory: () => void;
+  // let autonumericConfigFactory: () => void;
   let config: SkyAutonumericConfig;
 
   function detectChanges(): void {
@@ -44,10 +44,6 @@ describe('Autonumeric directive', () => {
   }
 
   beforeEach(() => {
-    autonumericConfigFactory = function () {
-      return config;
-    };
-
     TestBed.configureTestingModule({
       imports: [
         AutonumericFixtureModule
@@ -55,7 +51,7 @@ describe('Autonumeric directive', () => {
       providers: [
         {
           provide: SkyAutonumericConfig,
-          useFactory: autonumericConfigFactory
+          useValue: config
         }
       ]
     });
@@ -63,7 +59,7 @@ describe('Autonumeric directive', () => {
     fixture = TestBed.createComponent(AutonumericFixtureComponent);
   });
 
-  it('should work with default configuration', fakeAsync(() => {
+  it('should use default configuration', fakeAsync(() => {
     detectChanges();
 
     setValue(1000);
@@ -77,12 +73,10 @@ describe('Autonumeric directive', () => {
     expect(formattedValue).toEqual('1,000.00');
   }));
 
-  it('should work with custom global configuration', fakeAsync(() => {
+  it('should support custom global configuration', fakeAsync(() => {
     config = new SkyAutonumericConfig('French', {
       decimalPlaces: 5
     });
-
-    fail('This does not work :(');
 
     detectChanges();
 

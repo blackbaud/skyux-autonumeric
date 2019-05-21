@@ -8,7 +8,7 @@ import {
 
 import {
   // SkyAutonumericConfig,
-  SkyAutonumericModule
+  SkyAutonumericModule, SkyAutonumericConfig
 } from './public';
 
 @NgModule({
@@ -17,12 +17,12 @@ import {
     SkyAutonumericModule
   ],
   providers: [
-    // {
-    //   provide: SkyAutonumericConfig,
-    //   useValue: new SkyAutonumericConfig('French', {
-    //     decimalPlaces: 5
-    //   })
-    // }
+    {
+      provide: SkyAutonumericConfig,
+      useValue: new SkyAutonumericConfig('French', {
+        decimalPlaces: 5
+      })
+    }
   ]
 })
 export class AppExtrasModule { }
