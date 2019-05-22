@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/@skyux/config/skyuxconfig-schema.json",
+  "name": "skyux-autonumeric",
   "mode": "easy",
   "compileMode": "aot",
   "plugins": [
