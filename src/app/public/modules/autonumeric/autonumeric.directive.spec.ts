@@ -40,6 +40,7 @@ describe('Autonumeric directive', () => {
 
   function setValue(value: number): void {
     fixture.componentInstance.formGroup.get('donationAmount').setValue(value);
+    fixture.componentInstance.templateDrivenModel.donationAmount = value;
   }
 
   function setOptions(options: SkyAutonumericOptions): void {
@@ -47,11 +48,25 @@ describe('Autonumeric directive', () => {
   }
 
   function getFormattedValue(): string {
-    return fixture.nativeElement.querySelector('input').value;
+    const reactiveValue = fixture.nativeElement.querySelector('.app-reactive-form-input').value;
+    const templateDrivenValue = fixture.nativeElement.querySelector('.app-template-driven-input').value;
+
+    if (reactiveValue !== templateDrivenValue) {
+      fail(`The reactive and template-driven forms's formatted values do not match! ('${reactiveValue}' versus '${templateDrivenValue}')`);
+    }
+
+    return reactiveValue;
   }
 
   function getModelValue(): number {
-    return fixture.componentInstance.formControl.value;
+    const reactiveValue = fixture.componentInstance.formControl.value;
+    const templateDrivenValue = fixture.componentInstance.donationAmountTemplateDriven.value;
+
+    if (reactiveValue !== templateDrivenValue) {
+      fail(`The reactive and template-driven forms's model values do not match! ('${reactiveValue}' versus '${templateDrivenValue}')`);
+    }
+
+    return reactiveValue;
   }
 
   function verifyFormControlStatuses(
