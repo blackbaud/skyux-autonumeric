@@ -1,11 +1,10 @@
 import {
   Directive,
-  Input,
-  forwardRef,
   ElementRef,
-  Optional,
-  OnInit,
-  HostListener
+  forwardRef,
+  HostListener,
+  Input,
+  OnInit
 } from '@angular/core';
 
 import {
@@ -63,7 +62,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
 
   constructor (
     private elementRef: ElementRef,
-    @Optional() private globalConfig: SkyAutonumericOptionsProvider
+    private globalConfig: SkyAutonumericOptionsProvider
   ) {
     this.createAutonumericInstance();
   }

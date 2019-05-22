@@ -5,38 +5,57 @@
 Add the autonumeric attribute to an input element.
 
 ```
-<input type="text" skyAutonumeric>
+<input
+  type="text"
+  skyAutonumeric
+>
 ```
 
-To use a [preset](https://github.com/autoNumeric/autoNumeric#predefined-options), include the autonumericPreset attribute.
+To use a [predefined set of options](https://github.com/autoNumeric/autoNumeric#predefined-options):
 
 ```
-<input type="text" skyAutonumeric skyAutonumericLanguagePreset="dollar">
+<input
+  type="text"
+  skyAutonumeric="dollar"
+/>
 ```
 
-To use [options](https://github.com/autoNumeric/autoNumeric#options), include the autonumericOptions attribute.
+To use a [custom set of options](https://github.com/autoNumeric/autoNumeric#options):
 
 ```
-<input type="text" skyAutonumeric [skyAutonumericOptions]="{ decimalPlaces: 5 }">
+<input
+  type="text"
+  [skyAutonumeric]="{ decimalPlaces: 5 }"
+/>
 ```
-
-The preset is applied before the options if both are used.
 
 ### Global Configuration
 
-To configure all autonumeric instances in your SPA the same way as the attribute, you can create an AutonumericConfig and supply it in the module providers.
+To configure all `skyAutonumeric` instances in your SPA the same way, create a class that extends the base class `SkyAutonumericOptionsProvider` and supply it in the module providers.
 
-This is not required.
+**my-autonumeric-options-provider.ts**
+```
+export class MyAutonumericOptionsProvider extends SkyAutonumericOptionsProvider {
+  constructor() {
+    super();
+  }
 
+  public getConfig(): SkyAutonumericOptions {
+    return {
+      decimalPlaces: 5
+    };
+  }
+}
+```
+
+**app.module.ts**
 ```
 providers: [
-    {
-      provide: SkyAutonumericConfig,
-      useValue: new SkyAutonumericConfig('English', {
-        decimalPlaces: 5
-      })
-    }
-  ]
+  {
+    provide: SkyAutonumericOptionsProvider,
+    useClass: MyAutonumericOptionsProvider
+  }
+]
 ```
 
 ## Install dependencies and view the example

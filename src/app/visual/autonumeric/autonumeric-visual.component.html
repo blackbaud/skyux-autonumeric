@@ -11,9 +11,9 @@
     />
   </form>
 
-  <pre>Pristine: {{formGroup.controls.donationAmount.pristine}}</pre>
-  <pre>Touched: {{formGroup.controls.donationAmount.touched}}</pre>
-  <pre>Valid: {{formGroup.controls.donationAmount.valid}}</pre>
+  <div>Pristine: {{formGroup.controls.donationAmount.pristine}}</div>
+  <div>Touched: {{formGroup.controls.donationAmount.touched}}</div>
+  <div>Valid: {{formGroup.controls.donationAmount.valid}}</div>
 
   <button
     class="sky-btn"
@@ -34,17 +34,17 @@
   <button
     class="sky-btn"
     type="button"
-    (click)="setOptionsByPreset()"
+    (click)="setOptions()"
   >
-    Set language preset
+    Set options
   </button>
 
   <button
     class="sky-btn"
     type="button"
-    (click)="setOptions()"
+    (click)="setOptionsByPreset()"
   >
-    Set options
+    Set options by preset
   </button>
 
 </div>

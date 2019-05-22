@@ -24,17 +24,9 @@ import {
   SkyAutonumericOptionsProvider
 } from '../../public';
 
-export class MyAutonumericOptionsProvider extends SkyAutonumericOptionsProvider {
-  constructor() {
-    super();
-  }
-
-  public getConfig(): SkyAutonumericOptions {
-    return {
-      decimalPlaces: 5
-    };
-  }
-}
+import {
+  AutonumericVisualOptionsProvider
+} from './autonumeric-visual-options-provider';
 
 @Component({
   selector: 'autonumeric-visual',
@@ -43,7 +35,7 @@ export class MyAutonumericOptionsProvider extends SkyAutonumericOptionsProvider 
   providers: [
     {
       provide: SkyAutonumericOptionsProvider,
-      useClass: MyAutonumericOptionsProvider
+      useClass: AutonumericVisualOptionsProvider
     }
   ]
 })
