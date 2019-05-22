@@ -1,5 +1,9 @@
 # @skyux/autonumeric
 
+[![npm](https://img.shields.io/npm/v/@skyux/autonumeric.svg)](https://www.npmjs.com/package/@skyux/autonumeric)
+[![status](https://travis-ci.org/blackbaud/skyux-autonumeric.svg?branch=master)](https://travis-ci.org/blackbaud/skyux-autonumeric)
+[![coverage](https://codecov.io/gh/blackbaud/skyux-autonumeric/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/gh/blackbaud/skyux-autonumeric/branch/master)
+
 ### Usage
 
 Add the autonumeric attribute to an input element.
