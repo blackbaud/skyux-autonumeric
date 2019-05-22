@@ -143,6 +143,23 @@ describe('Autonumeric directive', () => {
     expect(spy).toHaveBeenCalled();
   }));
 
+  it('should not notify identical value changes', fakeAsync(() => {
+    detectChanges();
+
+    const spy = spyOn(fixture.componentInstance.autonumericDirective as any, 'onChange').and.callThrough();
+
+    setValue(1000);
+    detectChanges();
+
+    expect(spy).toHaveBeenCalled();
+
+    spy.calls.reset();
+    setValue(1000);
+    detectChanges();
+
+    expect(spy).not.toHaveBeenCalled();
+  }));
+
   it('should be accessible', async(() => {
     fixture.detectChanges();
 
