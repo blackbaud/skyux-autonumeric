@@ -1,3 +1,7 @@
+# 3.0.1 (2019-08-01)
+
+- Fixed `skyAutonumeric` directive to properly format a zero (0) value. [#5](https://github.com/blackbaud/skyux-autonumeric/pull/5) (Thanks [@Blackbaud-StewartStephens](https://github.com/Blackbaud-StewartStephens)!)
+
 # 3.0.0 (2019-05-22)
 
 - Initial major release.
