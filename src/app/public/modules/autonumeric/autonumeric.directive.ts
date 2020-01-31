@@ -77,7 +77,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
   /**
    * Implemented as part of ControlValueAccessor.
    */
-  public setDisabledState(value: boolean) {
+  public setDisabledState(value: boolean): void {
     this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', value);
   }
 
