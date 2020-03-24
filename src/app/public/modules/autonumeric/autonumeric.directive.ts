@@ -82,6 +82,12 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
   }
 
   public writeValue(value: number): void {
+
+    if (typeof value !== 'number' && value !== null && value !== undefined) {
+      console.warn(`'${value}' is invalid. The value provided to the autonumeric directive form control must be numeric.`);
+      value = undefined;
+    }
+
     if (this.value !== value) {
       this.value = value;
       this.onChange(value);
@@ -97,7 +103,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
       }
     }
 
-    if (!Number.isNaN(value) && value !== undefined && value !== null) {
+    if (typeof value === 'number' && value !== null && value !== undefined) {
       this.autonumericInstance.set(value);
     } else {
       this.autonumericInstance.clear();
@@ -122,7 +128,9 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
 
   @HostListener('blur')
   public onBlur(): void {
-    const numericValue = this.autonumericInstance.getNumber();
+    const inputValue = this.getInputValue();
+    const numericValue = inputValue ? this.autonumericInstance.getNumber() : undefined;
+    // const numericValue = this.autonumericInstance.getNumber();
 
     /* istanbul ignore else */
     if (this.value !== numericValue) {
@@ -139,6 +147,10 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
     if (this.control) {
       this.control.markAsDirty();
     }
+  }
+
+  private getInputValue(): string {
+    return this.elementRef.nativeElement.value;
   }
 
   private createAutonumericInstance(): void {
