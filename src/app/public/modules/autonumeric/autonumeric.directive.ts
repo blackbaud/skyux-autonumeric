@@ -14,7 +14,8 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ValidationErrors,
-  Validator
+  Validator,
+  ValidatorFn
 } from '@angular/forms';
 
 import {
@@ -83,11 +84,6 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
 
   public writeValue(value: number): void {
 
-    if (typeof value !== 'number' && value !== null && value !== undefined) {
-      console.warn(`'${value}' is invalid. The value provided to the autonumeric directive form control must be of type number.`);
-      value = undefined;
-    }
-
     if (this.value !== value) {
       this.value = value;
       this.onChange(value);
@@ -113,6 +109,16 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
   public validate(control: AbstractControl): ValidationErrors {
     if (!this.control) {
       this.control = control;
+    }
+
+    if (control.value === null || control.value === undefined) {
+      return;
+    }
+
+    if (typeof control.value !== 'number') {
+      return {
+        'notTypeOfNumber': { value: control.value }
+      };
     }
 
     return;

@@ -212,24 +212,6 @@ describe('Autonumeric directive', () => {
     expect(spy).not.toHaveBeenCalled();
   }));
 
-  it('should throw a console warning if given a non-numerical value', fakeAsync(() => {
-    detectChanges();
-
-    const spy = spyOn(console, 'warn').and.callThrough();
-
-    fixture.componentInstance.formGroup.get('donationAmount').setValue('foo');
-    fixture.componentInstance.templateDrivenModel.donationAmount = 'foo';
-    detectChanges();
-
-    expect(spy).toHaveBeenCalled();
-
-    spy.calls.reset();
-    setValue(1000);
-    detectChanges();
-
-    expect(spy).not.toHaveBeenCalled();
-  }));
-
   it('should not throw a console warning if given an undefined value', fakeAsync(() => {
     detectChanges();
 
@@ -406,6 +388,22 @@ describe('Autonumeric directive', () => {
       // Expect both the input element and form control to be enabled.
       expect(input.disabled).toEqual(false);
       expect(formControl.disabled).toEqual(false);
+    }));
+
+    it('should mark the control as invalid if given a non-numerical value', fakeAsync(() => {
+      detectChanges();
+
+      verifyFormControlStatuses({
+        valid: true
+      });
+
+      fixture.componentInstance.formGroup.get('donationAmount').setValue('foo');
+      fixture.componentInstance.templateDrivenModel.donationAmount = 'foo';
+      detectChanges();
+
+      verifyFormControlStatuses({
+        valid: false
+      });
     }));
 
   });
