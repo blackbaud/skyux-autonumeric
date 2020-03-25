@@ -14,8 +14,7 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ValidationErrors,
-  Validator,
-  ValidatorFn
+  Validator
 } from '@angular/forms';
 
 import {
