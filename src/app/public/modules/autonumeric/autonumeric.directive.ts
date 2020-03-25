@@ -84,7 +84,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
   public writeValue(value: number): void {
 
     if (typeof value !== 'number' && value !== null && value !== undefined) {
-      console.warn(`'${value}' is invalid. The value provided to the autonumeric directive form control must be numeric.`);
+      console.warn(`'${value}' is invalid. The value provided to the autonumeric directive form control must be of type number.`);
       value = undefined;
     }
 
@@ -130,7 +130,6 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
   public onBlur(): void {
     const inputValue = this.getInputValue();
     const numericValue = inputValue ? this.autonumericInstance.getNumber() : undefined;
-    // const numericValue = this.autonumericInstance.getNumber();
 
     /* istanbul ignore else */
     if (this.value !== numericValue) {
