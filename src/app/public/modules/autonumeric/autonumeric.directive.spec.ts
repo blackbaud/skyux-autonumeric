@@ -212,18 +212,6 @@ describe('Autonumeric directive', () => {
     expect(spy).not.toHaveBeenCalled();
   }));
 
-  it('should not throw a console warning if given an undefined value', fakeAsync(() => {
-    detectChanges();
-
-    const spy = spyOn(console, 'warn').and.callThrough();
-
-    fixture.componentInstance.formGroup.get('donationAmount').setValue(undefined);
-    fixture.componentInstance.templateDrivenModel.donationAmount = undefined;
-    detectChanges();
-
-    expect(spy).not.toHaveBeenCalled();
-  }));
-
   it('should be accessible', async(() => {
     fixture.detectChanges();
 
@@ -329,7 +317,7 @@ describe('Autonumeric directive', () => {
       });
     }));
 
-    it('should mark the input as invalid on blur if the field is required and the value is undefined', fakeAsync(() => {
+    it('should mark the control as invalid on blur if the field is required and the value is undefined', fakeAsync(() => {
       detectChanges();
       fixture.componentInstance.formControl.setValidators([Validators.required]);
       fixture.componentInstance.required = true;
@@ -345,6 +333,22 @@ describe('Autonumeric directive', () => {
         SkyAppTestUtility.fireDomEvent(inputs[i], 'input');
         SkyAppTestUtility.fireDomEvent(inputs[i], 'blur');
       }
+      detectChanges();
+
+      verifyFormControlStatuses({
+        valid: false
+      });
+    }));
+
+    it('should mark the control as invalid if given a non-numerical value', fakeAsync(() => {
+      detectChanges();
+
+      verifyFormControlStatuses({
+        valid: true
+      });
+
+      fixture.componentInstance.formGroup.get('donationAmount').setValue('foo');
+      fixture.componentInstance.templateDrivenModel.donationAmount = 'foo';
       detectChanges();
 
       verifyFormControlStatuses({
@@ -388,22 +392,6 @@ describe('Autonumeric directive', () => {
       // Expect both the input element and form control to be enabled.
       expect(input.disabled).toEqual(false);
       expect(formControl.disabled).toEqual(false);
-    }));
-
-    it('should mark the control as invalid if given a non-numerical value', fakeAsync(() => {
-      detectChanges();
-
-      verifyFormControlStatuses({
-        valid: true
-      });
-
-      fixture.componentInstance.formGroup.get('donationAmount').setValue('foo');
-      fixture.componentInstance.templateDrivenModel.donationAmount = 'foo';
-      detectChanges();
-
-      verifyFormControlStatuses({
-        valid: false
-      });
     }));
 
   });
