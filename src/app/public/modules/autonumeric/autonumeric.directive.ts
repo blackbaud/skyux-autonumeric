@@ -62,7 +62,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
   private isFirstChange = true;
   private value: number;
 
-  constructor (
+  constructor(
     private elementRef: ElementRef,
     private globalConfig: SkyAutonumericOptionsProvider,
     private renderer: Renderer2
@@ -134,7 +134,9 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
   @HostListener('blur')
   public onBlur(): void {
     const inputValue = this.getInputValue();
-    const numericValue = inputValue ? this.autonumericInstance.getNumber() : undefined;
+    const currencySymbol = (<{ [key: string]: any; }>this.autonumericOptions)['currencySymbol'];
+    const numericValue = (inputValue && (!currencySymbol || inputValue !== currencySymbol.trim())) ?
+      this.autonumericInstance.getNumber() : undefined;
 
     /* istanbul ignore else */
     if (this.value !== numericValue) {
@@ -184,7 +186,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
   }
 
   /* istanbul ignore next */
-  private onChange = (_: number) => {};
+  private onChange = (_: number) => { };
   /* istanbul ignore next */
-  private onTouched = () => {};
+  private onTouched = () => { };
 }
