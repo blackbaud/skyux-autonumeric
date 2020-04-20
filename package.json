@@ -1,6 +1,6 @@
 {
   "name": "@skyux/autonumeric",
-  "version": "3.0.4",
+  "version": "4.0.0-rc.0",
   "description": "Library for skyux-lib-autonumeric",
   "main": "bundles/bundle.umd.js",
   "module": "index.ts",
@@ -40,7 +40,6 @@
     "@angular/platform-browser-dynamic": "9.1.2",
     "@angular/router": "9.1.2",
     "@blackbaud/auth-client": "2.24.0",
-    "@blackbaud/skyux-lib-testing": "1.2.0",
     "@skyux-sdk/builder": "4.0.0-rc.5",
     "@skyux-sdk/builder-plugin-skyux": "1.3.1",
     "@skyux-sdk/testing": "4.0.0-rc.1",

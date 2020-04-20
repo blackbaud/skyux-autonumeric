@@ -1,3 +1,13 @@
+# 4.0.0-rc.0 (2020-04-20)
+
+### New features
+
+- Updated the pipeline to transpile to the [Angular Package Format](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/preview). [#20](https://github.com/blackbaud/skyux-autonumeric/pull/20)
+
+### Breaking changes
+
+- Dropped support for `rxjs@5`. Consumers may install `rxjs-compat@^6` to support older versions of `rxjs`. [#20](https://github.com/blackbaud/skyux-autonumeric/pull/20)
+
 # 3.0.4 (2020-04-07)
 
 - Fixed the `skyAutonumeric` directive to no longer treat empty values as zero when using a currency symbol. [#18](https://github.com/blackbaud/skyux-autonumeric/pull/18)
