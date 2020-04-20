@@ -6,6 +6,11 @@
   "plugins": [
     "@skyux-sdk/builder-plugin-skyux"
   ],
+  "librarySettings": {
+    "whitelistedNonPeerDependencies": [
+      "autonumeric"
+    ]
+  },
   "testSettings": {
     "unit": {
       "browserSet": "paranoid"
