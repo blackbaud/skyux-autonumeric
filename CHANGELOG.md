@@ -1,3 +1,7 @@
+# 3.0.5 (2020-04-23)
+
+- Fixed the `skyAutonumeric` directive to validate on input changes. [#22](https://github.com/blackbaud/skyux-autonumeric/pull/22)
+
 # 4.0.0-rc.0 (2020-04-20)
 
 ### New features
