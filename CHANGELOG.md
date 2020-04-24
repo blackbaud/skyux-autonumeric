@@ -1,3 +1,7 @@
+# 3.0.5 (2020-04-23)
+
+- Fixed the `skyAutonumeric` directive to validate on input changes. [#22](https://github.com/blackbaud/skyux-autonumeric/pull/22)
+
 # 4.0.0-rc.0 (2020-04-20)
 
 ### New features
@@ -7,10 +11,6 @@
 ### Breaking changes
 
 - Dropped support for `rxjs@5`. Consumers may install `rxjs-compat@^6` to support older versions of `rxjs`. [#20](https://github.com/blackbaud/skyux-autonumeric/pull/20)
-
-# 3.0.5 (2020-04-23)
-
-- Fixed the `skyAutonumeric` directive to validate on input changes. [#22](https://github.com/blackbaud/skyux-autonumeric/pull/22)
 
 # 3.0.4 (2020-04-07)
 
