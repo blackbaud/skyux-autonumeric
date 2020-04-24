@@ -1,3 +1,7 @@
+# 4.0.0-rc.1 (2020-04-24)
+
+- Added bug fixes and features from the `master` branch. [#24](https://github.com/blackbaud/skyux-autonumeric/pull/24)
+
 # 3.0.5 (2020-04-23)
 
 - Fixed the `skyAutonumeric` directive to validate on input changes. [#22](https://github.com/blackbaud/skyux-autonumeric/pull/22)
