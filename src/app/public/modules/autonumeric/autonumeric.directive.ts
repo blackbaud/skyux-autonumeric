@@ -26,6 +26,10 @@ import {
   Validator
 } from '@angular/forms';
 
+import AutoNumeric, {
+  Options
+} from 'autonumeric';
+
 import {
   SkyAutonumericOptions
 } from './autonumeric-options';
@@ -33,8 +37,6 @@ import {
 import {
   SkyAutonumericOptionsProvider
 } from './autonumeric-options-provider';
-
-const autoNumeric: any = require('autonumeric');
 
 // tslint:disable:no-forward-ref no-use-before-declare
 const SKY_AUTONUMERIC_VALUE_ACCESSOR = {
@@ -178,7 +180,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
   }
 
   private createAutonumericInstance(): void {
-    this.autonumericInstance = new autoNumeric(this.elementRef.nativeElement);
+    this.autonumericInstance = new AutoNumeric(this.elementRef.nativeElement);
   }
 
   private updateAutonumericInstance(): void {
@@ -190,8 +192,8 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
 
     let newOptions: SkyAutonumericOptions = {};
     if (typeof value === 'string') {
-      const predefinedOptions = autoNumeric.getPredefinedOptions();
-      newOptions = predefinedOptions[value];
+      const predefinedOptions = AutoNumeric.getPredefinedOptions();
+      newOptions = predefinedOptions[value] as Options;
     } else {
       newOptions = value;
     }

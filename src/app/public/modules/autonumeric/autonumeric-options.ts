@@ -1,3 +1,8 @@
+import {
+  Options,
+  PredefinedOptions
+} from 'autonumeric';
+
 /**
  * @description Custom options to be provided directly to the underlying autoNumeric library.
  * The value can be set to one of `string` or `Object`.
@@ -7,6 +12,4 @@
  * - `Object`: A custom set of available options.
  *   See: https://github.com/autoNumeric/autoNumeric#options
  */
-export type SkyAutonumericOptions = string | {
-  [key: string]: any;
-};
+export type SkyAutonumericOptions = keyof PredefinedOptions | Options;
