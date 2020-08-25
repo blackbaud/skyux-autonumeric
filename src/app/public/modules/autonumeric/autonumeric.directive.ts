@@ -67,7 +67,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
     this.updateAutonumericInstance();
   }
 
-  private autonumericInstance: any;
+  private autonumericInstance: AutoNumeric;
   private autonumericOptions: SkyAutonumericOptions;
   private control: AbstractControl;
   private isFirstChange = true;
@@ -130,7 +130,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
       if (
         this.isFirstChange &&
         this.control &&
-        this.value
+        this.value !== null
       ) {
         this.isFirstChange = false;
         this.control.markAsPristine();
@@ -184,7 +184,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
   }
 
   private updateAutonumericInstance(): void {
-    this.autonumericInstance.update(this.autonumericOptions);
+    this.autonumericInstance.update(this.autonumericOptions as Options);
   }
 
   private mergeOptions(value: SkyAutonumericOptions): SkyAutonumericOptions {
@@ -193,7 +193,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
     let newOptions: SkyAutonumericOptions = {};
     if (typeof value === 'string') {
       const predefinedOptions = AutoNumeric.getPredefinedOptions();
-      newOptions = predefinedOptions[value] as Options;
+      newOptions = predefinedOptions[value as keyof Options] as Options;
     } else {
       newOptions = value;
     }

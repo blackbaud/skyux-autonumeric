@@ -1,6 +1,5 @@
-import {
-  Options,
-  PredefinedOptions
+import AutoNumeric, {
+  Options
 } from 'autonumeric';
 
 /**
@@ -9,7 +8,7 @@ import {
  * - `string`: An alias representing a set of predefined options.
  *   This alias can be either a currency preset, or a language preset.
  *   See: https://github.com/autoNumeric/autoNumeric#predefined-options
- * - `Object`: A custom set of available options.
+ * - `Options`: A custom set of available options.
  *   See: https://github.com/autoNumeric/autoNumeric#options
  */
-export type SkyAutonumericOptions = keyof PredefinedOptions | Options;
+export type SkyAutonumericOptions = string | keyof AutoNumeric.PredefinedOptions | Options;
