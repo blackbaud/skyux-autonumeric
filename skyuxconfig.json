@@ -32,5 +32,10 @@
     "frameOptions": {
       "none": true
     }
+  },
+  "app": {
+    "styles": [
+      "@skyux/docs-tools/css/docs-tools.css"
+    ]
   }
 }
