@@ -25,6 +25,20 @@
     "@angular/forms": "^9.1.6"
   },
   "dependencies": {
+    "@blackbaud/skyux-builder-plugin-code-block": "1.1.0",
+    "@blackbaud/skyux-lib-clipboard": "4.0.0",
+    "@blackbaud/skyux-lib-code-block": "4.0.1",
+    "@blackbaud/skyux-lib-media": "4.0.0",
+    "@blackbaud/skyux-lib-restricted-view": "4.1.0",
+    "@blackbaud/skyux-lib-stache": "4.2.1",
+    "@skyux/animations": "4.0.1",
+    "@skyux/forms": "4.13.4",
+    "@skyux/inline-form": "4.1.0",
+    "@skyux/layout": "4.3.0",
+    "@skyux/lists": "4.3.0",
+    "@skyux/lookup": "4.7.0",
+    "@skyux/popovers": "4.2.1",
+    "@skyux/tabs": "4.4.0",
     "autonumeric": "4.6.0"
   },
   "devDependencies": {
@@ -44,6 +58,7 @@
     "@skyux/assets": "4.0.1",
     "@skyux/config": "4.0.3",
     "@skyux/core": "4.2.0",
+    "@skyux/docs-tools": "4.7.3",
     "@skyux/http": "4.0.1",
     "@skyux/i18n": "4.0.1",
     "@skyux/indicators": "4.2.0",
