@@ -25,8 +25,8 @@ import {
     {
       provide: SkyDocsToolsOptions,
       useValue: {
-        gitRepoUrl: 'https://github.com/blackbaud/skyux-sample',
-        packageName: '@skyux/sample'
+        gitRepoUrl: 'https://github.com/blackbaud/skyux-autonumeric',
+        packageName: '@skyux/autonumeric'
       }
     }
   ]

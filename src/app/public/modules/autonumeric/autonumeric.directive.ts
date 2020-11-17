@@ -53,9 +53,8 @@ const SKY_AUTONUMERIC_VALIDATOR = {
 // tslint:enable
 
   /**
-   * Wraps the autoNumeric jQuery plugin to format any type of number, including currency.
-   * Use this directive in conjunction with the `ngModel` directive where the property bound
-   * to `ngModel` is the raw numeric value on your model.
+   * Wraps the [`autoNumeric` utility](https://github.com/autoNumeric/autoNumeric) to format
+   * any type of number, including currency.
    */
   @Directive({
   selector: 'input[skyAutonumeric]',
