@@ -14,9 +14,11 @@ import {
 import {
   AutonumericFixtureComponent
 } from './autonumeric.component.fixture';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SkyAutonumericModule

@@ -41,9 +41,9 @@ describe('Autonumeric directive', () => {
   let fixture: ComponentFixture<AutonumericFixtureComponent>;
 
   // #region helpers
-  function detectChanges(): void {
+  function detectChanges(debounceTime: number = 250): void {
     fixture.detectChanges();
-    tick(250);
+    tick(debounceTime);
   }
 
   function getReactiveInput(): HTMLInputElement {
@@ -227,6 +227,36 @@ describe('Autonumeric directive', () => {
         expect(modelValue).toEqual(1000);
         expect(formattedValue).toEqual('$1,000.00000');
       }));
+    });
+
+    describe('keyup debounce time', () => {
+      function testDebounceTime(useDefaultDebounce: boolean, debounceTime: number) {
+        fixture.componentInstance.useDefaultDebounce = useDefaultDebounce;
+        if (useDefaultDebounce === false) {
+          fixture.componentInstance.customDebounceTime = debounceTime;
+        }
+        detectChanges(debounceTime);
+
+        const autonumericInstance = fixture.componentInstance.autonumericDirective['autonumericInstance'];
+        const spy = spyOn(autonumericInstance, 'getNumber').and.callThrough();
+
+        const input = fixture.nativeElement.querySelector('input');
+        input.value = '1234.56';
+        SkyAppTestUtility.fireDomEvent(input, 'input');
+        SkyAppTestUtility.fireDomEvent(input, 'keyup');
+        detectChanges(debounceTime);
+
+        expect(spy).toHaveBeenCalled();
+      }
+
+      it('should default debounceTime to 250ms', fakeAsync(() => testDebounceTime(true, 250)));
+
+      [0, 100, 250, 1000].forEach(debouceTime => {
+        it(
+          `should allow debounce time to be configured (example - ${debouceTime}ms)`,
+          fakeAsync(() => testDebounceTime(false, debouceTime))
+        );
+      });
     });
   });
 

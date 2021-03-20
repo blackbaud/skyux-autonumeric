@@ -1,8 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ViewChild,
-  Input
+  ViewChild
 } from '@angular/core';
 
 import {
@@ -27,8 +26,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutonumericFixtureComponent {
-
-  @Input() public debounceTime: number = 250;
+  public useDefaultDebounce: boolean = true;
+  public customDebounceTime: number = 250;
 
   @ViewChild(SkyAutonumericDirective)
   public autonumericDirective: SkyAutonumericDirective;

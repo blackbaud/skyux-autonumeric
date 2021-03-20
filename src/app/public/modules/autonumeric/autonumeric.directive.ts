@@ -53,12 +53,20 @@ const SKY_AUTONUMERIC_VALIDATOR = {
 };
 // tslint:enable:no-forward-ref
 
+/** https://github.com/autoNumeric/autoNumeric#on-which-elements-can-it-be-used */
+const SELECTOR = 'skyAutonumeric';
+const TEXT_SELECTOR = `input[type=text][${SELECTOR}]`;
+const TEL_SELECTOR = `input[type=tel][${SELECTOR}]`;
+const HIDDEN_SELECTOR = `input[type=hidden][${SELECTOR}]`;
+const TYPE_UNSPECIFIED_SELECTOR = `input:not([type])[${SELECTOR}]`;
+const CONTENT_EDITABLE = `[contenteditable=true]`;
+
 /**
  * Wraps the [`autoNumeric` utility](https://github.com/autoNumeric/autoNumeric) to format
  * any type of number, including currency.
  */
 @Directive({
-  selector: 'input[skyAutonumeric]',
+  selector: `${TEXT_SELECTOR},${TEL_SELECTOR},${HIDDEN_SELECTOR},${TYPE_UNSPECIFIED_SELECTOR},${CONTENT_EDITABLE}`,
   providers: [
     SKY_AUTONUMERIC_VALUE_ACCESSOR,
     SKY_AUTONUMERIC_VALIDATOR
@@ -146,7 +154,7 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
       }
     }
 
-    const isNumber = typeof value === 'number' && value !== null && value !== undefined;
+    const isNumber: boolean = typeof value === 'number' && value !== null && value !== undefined;
     if (isNumber) {
       this.autonumericInstance.set(value);
     } else {
