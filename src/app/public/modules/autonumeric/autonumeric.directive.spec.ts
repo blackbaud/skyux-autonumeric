@@ -12,6 +12,7 @@ import {
 
 import {
   expect,
+  expectAsync,
   SkyAppTestUtility
 } from '@skyux-sdk/testing';
 
@@ -94,11 +95,7 @@ describe('Autonumeric directive', () => {
    * Checks both the reactive and template-driven controls against various statuses.
    * @param statuses A set of Angular NgModel statuses to check against (e.g., pristine, touched, valid).
    */
-  function verifyFormControlStatuses(
-    statuses: {
-      [_: string]: boolean;
-    }
-  ): void {
+  function verifyFormControlStatuses(statuses: Record<string, boolean>): void {
     const control: any = fixture.componentInstance.formControl;
     const model: any = fixture.componentInstance.donationAmountTemplateDriven;
 
@@ -123,168 +120,18 @@ describe('Autonumeric directive', () => {
     fixture.destroy();
   });
 
-  it('should use default configuration', fakeAsync(() => {
-    detectChanges();
-
-    setValue(1000);
-
-    detectChanges();
-
-    const modelValue = getModelValue();
-    const formattedValue = getFormattedValue();
-
-    expect(modelValue).toEqual(1000);
-    expect(formattedValue).toEqual('1,000.00');
-  }));
-
-  it('should properly format 0 values', fakeAsync(() => {
-    detectChanges();
-
-    setValue(0);
-
-    detectChanges();
-
-    const modelValue = getModelValue();
-    const formattedValue = getFormattedValue();
-
-    expect(modelValue).toEqual(0);
-    expect(formattedValue).toEqual('0.00');
-  }));
-
-  it('should support preset configuration', fakeAsync(() => {
-    setOptions('dollar');
-
-    detectChanges();
-
-    setValue(1000);
-
-    detectChanges();
-
-    const modelValue = getModelValue();
-    const formattedValue = getFormattedValue();
-
-    expect(modelValue).toEqual(1000);
-    expect(formattedValue).toEqual('$1,000.00');
-  }));
-
-  it('should support custom configuration', fakeAsync(() => {
-    setOptions({
-      decimalPlaces: 5
-    });
-
-    detectChanges();
-
-    setValue(1000);
-
-    detectChanges();
-
-    const modelValue = getModelValue();
-    const formattedValue = getFormattedValue();
-
-    expect(modelValue).toEqual(1000);
-    expect(formattedValue).toEqual('1,000.00000');
-  }));
-
-  it('should update numeric value on keyup', fakeAsync(() => {
-    detectChanges();
-
-    const autonumericInstance = fixture.componentInstance.autonumericDirective['autonumericInstance'];
-    const spy = spyOn(autonumericInstance, 'getNumber').and.callThrough();
-
-    const input = fixture.nativeElement.querySelector('input');
-
-    input.value = '1000';
-    SkyAppTestUtility.fireDomEvent(input, 'input');
-    SkyAppTestUtility.fireDomEvent(input, 'keyup');
-    detectChanges();
-
-    expect(spy).toHaveBeenCalled();
-  }));
-
-  it('should not update numeric value on keyup when no change is made', fakeAsync(() => {
-    detectChanges();
-
-    const autonumericInstance = fixture.componentInstance.autonumericDirective['autonumericInstance'];
-    const spy = spyOn(autonumericInstance, 'getNumber').and.callThrough();
-
-    const input = fixture.nativeElement.querySelector('input');
-
-    SkyAppTestUtility.fireDomEvent(input, 'mouseenter');
-    SkyAppTestUtility.fireDomEvent(input, 'input');
-    SkyAppTestUtility.fireDomEvent(input, 'keyup');
-    detectChanges();
-
-    expect(spy).not.toHaveBeenCalled();
-  }));
-
-  it('should not update numeric value on keyup when no change is made and a currency symbol is specified', fakeAsync(() => {
-    setOptions('dollar');
-
-    detectChanges();
-
-    const autonumericInstance = fixture.componentInstance.autonumericDirective['autonumericInstance'];
-    const spy = spyOn(autonumericInstance, 'getNumber').and.callThrough();
-
-    const input = fixture.nativeElement.querySelector('input');
-
-    SkyAppTestUtility.fireDomEvent(input, 'mouseenter');
-    SkyAppTestUtility.fireDomEvent(input, 'input');
-    SkyAppTestUtility.fireDomEvent(input, 'keyup');
-    detectChanges();
-
-    expect(spy).not.toHaveBeenCalled();
-  }));
-
-  it('should not notify identical value changes', fakeAsync(() => {
-    detectChanges();
-
-    const spy = spyOn(fixture.componentInstance.autonumericDirective as any, 'onChange').and.callThrough();
-
-    setValue(1000);
-    detectChanges();
-
-    expect(spy).toHaveBeenCalled();
-
-    spy.calls.reset();
-    setValue(1000);
-    detectChanges();
-
-    expect(spy).not.toHaveBeenCalled();
-  }));
-
-  it('should be accessible', async(() => {
+  it('should be accessible', async(async () => {
     fixture.detectChanges();
 
     setValue(1000);
 
     fixture.detectChanges();
 
-    fixture.whenStable().then(() => {
-      expect(fixture.nativeElement).toBeAccessible();
-    });
+    await expectAsync(fixture.debugElement.nativeElement).toBeAccessible();
   }));
 
-  describe('global configuration', () => {
-
-    beforeEach(() => {
-      TestBed.resetTestingModule();
-
-      TestBed.configureTestingModule({
-        imports: [
-          AutonumericFixtureModule
-        ],
-        providers: [
-          {
-            provide: SkyAutonumericOptionsProvider,
-            useClass: AutonumericFixtureOptionsProvider
-          }
-        ]
-      });
-
-      fixture = TestBed.createComponent(AutonumericFixtureComponent);
-    });
-
-    it('should support global configuration', fakeAsync(() => {
+  describe('Configuration', () => {
+    it('should use default configuration', fakeAsync(() => {
       detectChanges();
 
       setValue(1000);
@@ -295,10 +142,10 @@ describe('Autonumeric directive', () => {
       const formattedValue = getFormattedValue();
 
       expect(modelValue).toEqual(1000);
-      expect(formattedValue).toEqual('%1,000.00000');
+      expect(formattedValue).toEqual('1,000.00');
     }));
 
-    it('should overwrite global configuration with configuration from the input', fakeAsync(() => {
+    it('should support preset configuration', fakeAsync(() => {
       setOptions('dollar');
 
       detectChanges();
@@ -311,7 +158,160 @@ describe('Autonumeric directive', () => {
       const formattedValue = getFormattedValue();
 
       expect(modelValue).toEqual(1000);
-      expect(formattedValue).toEqual('$1,000.00000');
+      expect(formattedValue).toEqual('$1,000.00');
+    }));
+
+    it('should support custom configuration', fakeAsync(() => {
+      setOptions({
+        decimalPlaces: 5
+      });
+
+      detectChanges();
+
+      setValue(1000);
+
+      detectChanges();
+
+      const modelValue = getModelValue();
+      const formattedValue = getFormattedValue();
+
+      expect(modelValue).toEqual(1000);
+      expect(formattedValue).toEqual('1,000.00000');
+    }));
+
+    describe('global configuration', () => {
+      beforeEach(() => {
+        TestBed.resetTestingModule();
+
+        TestBed.configureTestingModule({
+          imports: [
+            AutonumericFixtureModule
+          ],
+          providers: [
+            {
+              provide: SkyAutonumericOptionsProvider,
+              useClass: AutonumericFixtureOptionsProvider
+            }
+          ]
+        });
+
+        fixture = TestBed.createComponent(AutonumericFixtureComponent);
+      });
+
+      it('should support global configuration', fakeAsync(() => {
+        detectChanges();
+
+        setValue(1000);
+
+        detectChanges();
+
+        const modelValue = getModelValue();
+        const formattedValue = getFormattedValue();
+
+        expect(modelValue).toEqual(1000);
+        expect(formattedValue).toEqual('%1,000.00000');
+      }));
+
+      it('should overwrite global configuration with configuration from the input', fakeAsync(() => {
+        setOptions('dollar');
+
+        detectChanges();
+
+        setValue(1000);
+
+        detectChanges();
+
+        const modelValue = getModelValue();
+        const formattedValue = getFormattedValue();
+
+        expect(modelValue).toEqual(1000);
+        expect(formattedValue).toEqual('$1,000.00000');
+      }));
+    });
+  });
+
+  describe('Value updates', () => {
+    it('should update numeric value on keyup', fakeAsync(() => {
+      detectChanges();
+
+      const autonumericInstance = fixture.componentInstance.autonumericDirective['autonumericInstance'];
+      const spy = spyOn(autonumericInstance, 'getNumber').and.callThrough();
+
+      const input = fixture.nativeElement.querySelector('input');
+
+      input.value = '1000';
+      SkyAppTestUtility.fireDomEvent(input, 'input');
+      SkyAppTestUtility.fireDomEvent(input, 'keyup');
+      detectChanges();
+
+      expect(spy).toHaveBeenCalled();
+    }));
+
+    it('should not update numeric value on keyup when no change is made', fakeAsync(() => {
+      detectChanges();
+
+      const autonumericInstance = fixture.componentInstance.autonumericDirective['autonumericInstance'];
+      const spy = spyOn(autonumericInstance, 'getNumber').and.callThrough();
+
+      const input = fixture.nativeElement.querySelector('input');
+
+      SkyAppTestUtility.fireDomEvent(input, 'mouseenter');
+      SkyAppTestUtility.fireDomEvent(input, 'input');
+      SkyAppTestUtility.fireDomEvent(input, 'keyup');
+      detectChanges();
+
+      expect(spy).not.toHaveBeenCalled();
+    }));
+
+    it('should not update numeric value on keyup when no change is made and a currency symbol is specified', fakeAsync(() => {
+      setOptions('dollar');
+
+      detectChanges();
+
+      const autonumericInstance = fixture.componentInstance.autonumericDirective['autonumericInstance'];
+      const spy = spyOn(autonumericInstance, 'getNumber').and.callThrough();
+
+      const input = fixture.nativeElement.querySelector('input');
+
+      SkyAppTestUtility.fireDomEvent(input, 'mouseenter');
+      SkyAppTestUtility.fireDomEvent(input, 'input');
+      SkyAppTestUtility.fireDomEvent(input, 'keyup');
+      detectChanges();
+
+      expect(spy).not.toHaveBeenCalled();
+    }));
+
+    it('should not notify identical value changes', fakeAsync(() => {
+      detectChanges();
+
+      const spy = spyOn(fixture.componentInstance.autonumericDirective as any, 'onChange').and.callThrough();
+
+      setValue(1000);
+      detectChanges();
+
+      expect(spy).toHaveBeenCalled();
+
+      spy.calls.reset();
+      setValue(1000);
+      detectChanges();
+
+      expect(spy).not.toHaveBeenCalled();
+    }));
+  });
+
+  describe('Formatting', () => {
+    it('should properly format 0 values', fakeAsync(() => {
+      detectChanges();
+
+      setValue(0);
+
+      detectChanges();
+
+      const modelValue = getModelValue();
+      const formattedValue = getFormattedValue();
+
+      expect(modelValue).toEqual(0);
+      expect(formattedValue).toEqual('0.00');
     }));
   });
 

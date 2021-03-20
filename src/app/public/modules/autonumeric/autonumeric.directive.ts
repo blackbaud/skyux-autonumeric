@@ -5,16 +5,17 @@ import {
   forwardRef,
   HostListener,
   Input,
+  OnDestroy,
   OnInit,
   Renderer2
 } from '@angular/core';
 
 import {
-  fromEvent
+  fromEvent, Subject
 } from 'rxjs';
 
 import {
-  debounceTime
+  debounceTime, takeUntil
 } from 'rxjs/operators';
 
 import {
@@ -38,7 +39,7 @@ import {
   SkyAutonumericOptionsProvider
 } from './autonumeric-options-provider';
 
-// tslint:disable:no-forward-ref no-use-before-declare
+// tslint:disable:no-forward-ref
 const SKY_AUTONUMERIC_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => SkyAutonumericDirective),
@@ -50,20 +51,20 @@ const SKY_AUTONUMERIC_VALIDATOR = {
   useExisting: forwardRef(() => SkyAutonumericDirective),
   multi: true
 };
-// tslint:enable
+// tslint:enable:no-forward-ref
 
-  /**
-   * Wraps the [`autoNumeric` utility](https://github.com/autoNumeric/autoNumeric) to format
-   * any type of number, including currency.
-   */
-  @Directive({
+/**
+ * Wraps the [`autoNumeric` utility](https://github.com/autoNumeric/autoNumeric) to format
+ * any type of number, including currency.
+ */
+@Directive({
   selector: 'input[skyAutonumeric]',
   providers: [
     SKY_AUTONUMERIC_VALUE_ACCESSOR,
     SKY_AUTONUMERIC_VALIDATOR
   ]
 })
-export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Validator {
+export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueAccessor, Validator {
 
   /**
    * Assigns the name of a property from `SkyAutonumericOptionsProvider`.
@@ -74,36 +75,40 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
     this.updateAutonumericInstance();
   }
 
+  /**
+   * Specifies how many milliseconds to wait before searching after users enter text in the search input.
+   * @default 250
+   */
+  @Input() public skyAutonumericDebounceTime: number = 250;
+
+  private nativeElement: HTMLInputElement;
   private autonumericInstance: AutoNumeric;
   private autonumericOptions: SkyAutonumericOptions;
   private control: AbstractControl;
   private isFirstChange = true;
   private value: number;
+  private onDestroy$: Subject<void> = new Subject();
 
   constructor(
-    private elementRef: ElementRef,
+    elementRef: ElementRef,
     private globalConfig: SkyAutonumericOptionsProvider,
     private renderer: Renderer2,
     private changeDetector: ChangeDetectorRef
   ) {
+    this.nativeElement = elementRef.nativeElement;
     this.createAutonumericInstance();
   }
 
   public ngOnInit(): void {
     this.updateAutonumericInstance();
 
-    fromEvent(this.elementRef.nativeElement, 'keyup')
-      .pipe(debounceTime(250))
+    fromEvent(this.nativeElement, 'keyup')
+      .pipe(
+        takeUntil(this.onDestroy$),
+        debounceTime(this.skyAutonumericDebounceTime)
+      )
       .subscribe(() => {
-        const inputValue = this.getInputValue();
-        /**
-         * Due to autocomplete's hover logic - when autocomplete has a currency symbol the value that we will get back on empty fields
-         * will be the currency symbol. The currency sybol logic here ensures that we don't accidentally set
-         * a form value when the only input was this programaticaly added currency symbol.
-         */
-        const currencySymbol = (<{ [key: string]: any; }>this.autonumericOptions)['currencySymbol'];
-        const numericValue = (inputValue && (!currencySymbol || inputValue !== currencySymbol.trim())) ?
-          this.autonumericInstance.getNumber() : undefined;
+        const numericValue: number | undefined = this.getNumericValue();
 
         /* istanbul ignore else */
         if (this.value !== numericValue) {
@@ -120,44 +125,45 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
       });
   }
 
-  /**
-   * Implemented as part of ControlValueAccessor.
-   */
+  public ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
+
   public setDisabledState(value: boolean): void {
-    this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', value);
+    this.renderer.setProperty(this.nativeElement, 'disabled', value);
   }
 
   public writeValue(value: number): void {
-
     if (this.value !== value) {
       this.value = value;
       this.onChange(value);
 
-      // Mark the control as "pristine" if it is initialized with a value.
-      if (
-        this.isFirstChange &&
-        this.control &&
-        this.value !== null
-      ) {
+      const initializedWithValue = this.isFirstChange && this.control && this.value !== null;
+      if (initializedWithValue) {
         this.isFirstChange = false;
         this.control.markAsPristine();
       }
     }
 
-    if (typeof value === 'number' && value !== null && value !== undefined) {
+    const isNumber = typeof value === 'number' && value !== null && value !== undefined;
+    if (isNumber) {
       this.autonumericInstance.set(value);
     } else {
       this.autonumericInstance.clear();
     }
   }
 
-  public validate(control: AbstractControl): ValidationErrors {
+  public validate(control: AbstractControl): ValidationErrors | null {
+    // tslint:disable-next-line: no-null-keyword
+    const noErrors: null = null;
+
     if (!this.control) {
       this.control = control;
     }
 
     if (control.value === null || control.value === undefined) {
-      return;
+      return noErrors;
     }
 
     if (typeof control.value !== 'number') {
@@ -166,7 +172,7 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
       };
     }
 
-    return;
+    return noErrors;
   }
 
   public registerOnChange(fn: (value: number) => void): void {
@@ -182,12 +188,27 @@ export class SkyAutonumericDirective implements OnInit, ControlValueAccessor, Va
     this.onTouched();
   }
 
+  /**
+   * Due to autocomplete's hover logic - when autocomplete has a currency symbol the value that we will get back on empty fields
+   * will be the currency symbol. The currency sybol logic here ensures that we don't accidentally set
+   * a form value when the only input was this programaticaly added currency symbol.
+   */
+  private getNumericValue(): number | undefined {
+    const inputValue = this.getInputValue();
+    const currencySymbol = (this.autonumericOptions as Record<string, any>)['currencySymbol'];
+    const numericValue = (inputValue && (!currencySymbol || inputValue !== currencySymbol.trim()))
+      ? this.autonumericInstance.getNumber()
+      : undefined;
+
+      return numericValue;
+  }
+
   private getInputValue(): string {
-    return this.elementRef.nativeElement.value;
+    return this.nativeElement.value;
   }
 
   private createAutonumericInstance(): void {
-    this.autonumericInstance = new AutoNumeric(this.elementRef.nativeElement);
+    this.autonumericInstance = new AutoNumeric(this.nativeElement);
   }
 
   private updateAutonumericInstance(): void {

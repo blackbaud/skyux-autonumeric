@@ -1,8 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
-  ViewChild
+  ViewChild,
+  Input
 } from '@angular/core';
 
 import {
@@ -26,7 +26,9 @@ import {
   templateUrl: './autonumeric.component.fixture.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutonumericFixtureComponent implements OnInit {
+export class AutonumericFixtureComponent {
+
+  @Input() public debounceTime: number = 250;
 
   @ViewChild(SkyAutonumericDirective)
   public autonumericDirective: SkyAutonumericDirective;
@@ -36,7 +38,10 @@ export class AutonumericFixtureComponent implements OnInit {
 
   public autonumericOptions: SkyAutonumericOptions;
 
-  public formGroup: FormGroup;
+  public formGroup: FormGroup = this.formBuilder.group({
+    donationAmount: new FormControl(),
+    donationAmountWithDebounce: new FormControl()
+  });
 
   public templateDrivenModel: any = {
     donationAmount: 1000
@@ -46,15 +51,13 @@ export class AutonumericFixtureComponent implements OnInit {
     return this.formGroup.get('donationAmount');
   }
 
+  public get formControlWithDebounce(): AbstractControl {
+    return this.formGroup.get('donationAmountWithDebounce');
+  }
+
   public required: boolean;
 
   constructor(
     private formBuilder: FormBuilder
   ) { }
-
-  public ngOnInit(): void {
-    this.formGroup = this.formBuilder.group({
-      donationAmount: new FormControl()
-    });
-  }
 }
