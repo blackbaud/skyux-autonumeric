@@ -50,6 +50,18 @@ describe('Autonumeric directive', () => {
     return fixture.nativeElement.querySelector('#donationAmount') as HTMLInputElement;
   }
 
+  function getReactiveInputByClass(): HTMLInputElement {
+    const input = fixture.nativeElement.querySelector('.app-reactive-form-input');
+    expect(input).toBeDefined();
+    return input;
+  }
+
+  function getTemplateInputByClass(): HTMLInputElement {
+    const input = fixture.nativeElement.querySelector('.app-template-driven-input');
+    expect(input).toBeDefined();
+    return input;
+  }
+
   function setValue(value: number): void {
     fixture.componentInstance.formGroup.get('donationAmount').setValue(value);
     fixture.componentInstance.templateDrivenModel.donationAmount = value;
@@ -60,8 +72,8 @@ describe('Autonumeric directive', () => {
   }
 
   function getFormattedValue(): string {
-    const reactiveValue = fixture.nativeElement.querySelector('.app-reactive-form-input').value;
-    const templateDrivenValue = fixture.nativeElement.querySelector('.app-template-driven-input').value;
+    const reactiveValue = getReactiveInputByClass().value;
+    const templateDrivenValue = getTemplateInputByClass().value;
 
     if (reactiveValue !== templateDrivenValue) {
       fail(`The reactive and template-driven forms's formatted values do not match! ('${reactiveValue}' versus '${templateDrivenValue}')`);
@@ -82,13 +94,37 @@ describe('Autonumeric directive', () => {
   }
 
   function triggerBlur(): void {
-    SkyAppTestUtility.fireDomEvent(fixture.nativeElement.querySelector('.app-reactive-form-input'), 'blur');
-    SkyAppTestUtility.fireDomEvent(fixture.nativeElement.querySelector('.app-template-driven-input'), 'blur');
+    SkyAppTestUtility.fireDomEvent(getReactiveInputByClass(), 'blur');
+    SkyAppTestUtility.fireDomEvent(getTemplateInputByClass(), 'blur');
   }
 
   function triggerKeyUp(): void {
-    SkyAppTestUtility.fireDomEvent(fixture.nativeElement.querySelector('.app-reactive-form-input'), 'keyup');
-    SkyAppTestUtility.fireDomEvent(fixture.nativeElement.querySelector('.app-template-driven-input'), 'keyup');
+    SkyAppTestUtility.fireDomEvent(getReactiveInputByClass(), 'keyup');
+    SkyAppTestUtility.fireDomEvent(getTemplateInputByClass(), 'keyup');
+  }
+
+  function triggerInput(): void {
+    SkyAppTestUtility.fireDomEvent(getReactiveInputByClass(), 'input');
+    SkyAppTestUtility.fireDomEvent(getTemplateInputByClass(), 'input');
+  }
+
+  /** Mocks typing a number into the input element. */
+  function simulateTyping(numberToType: number): void {
+    let s = '';
+
+    const inputs: HTMLInputElement[] = fixture.nativeElement.querySelectorAll('input');
+    inputs[0].value = '';
+    inputs[1].value = '';
+    triggerInput();
+    triggerKeyUp();
+
+    for (let ch of numberToType.toString().split('')) {
+      s += ch;
+      inputs[0].value = s;
+      inputs[1].value = s;
+      triggerInput();
+      triggerKeyUp();
+    }
   }
 
   /**
@@ -240,22 +276,23 @@ describe('Autonumeric directive', () => {
         const autonumericInstance = fixture.componentInstance.autonumericDirective['autonumericInstance'];
         const spy = spyOn(autonumericInstance, 'getNumber').and.callThrough();
 
-        const input = fixture.nativeElement.querySelector('input');
-        input.value = '1234.56';
-        SkyAppTestUtility.fireDomEvent(input, 'input');
-        SkyAppTestUtility.fireDomEvent(input, 'keyup');
-        detectChanges(debounceTime);
+        simulateTyping(1234.56);
 
+        // wait up to 1 second before the event is supposed to be debounced
+        detectChanges(debounceTime - 1);
+        expect(spy).not.toHaveBeenCalled();
+
+        // wait that 1 second and check for the expected keyup event.
+        detectChanges(1);
         expect(spy).toHaveBeenCalled();
+
+        expect(spy).toHaveBeenCalledTimes(1);
       }
 
       it('should default debounceTime to 250ms', fakeAsync(() => testDebounceTime(true, 250)));
 
       [0, 100, 250, 1000].forEach(debouceTime => {
-        it(
-          `should allow debounce time to be configured (example - ${debouceTime}ms)`,
-          fakeAsync(() => testDebounceTime(false, debouceTime))
-        );
+        it(`should allow debounce time to be configured (ex: ${debouceTime}ms)`, fakeAsync(() => testDebounceTime(false, debouceTime)));
       });
     });
   });
