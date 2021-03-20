@@ -196,19 +196,20 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
     this.onTouched();
   }
 
-  /**
-   * Due to autocomplete's hover logic - when autocomplete has a currency symbol the value that we will get back on empty fields
-   * will be the currency symbol. The currency sybol logic here ensures that we don't accidentally set
-   * a form value when the only input was this programaticaly added currency symbol.
-   */
   private getNumericValue(): number | undefined {
     const inputValue = this.getInputValue();
     const currencySymbol = (this.autonumericOptions as Record<string, any>)['currencySymbol'];
-    const numericValue = (inputValue && (!currencySymbol || inputValue !== currencySymbol.trim()))
+
+    // Due to autocomplete's hover logic - when autocomplete has a currency symbol the value that we will get back on empty fields
+    // will be the currency symbol. The currency sybol logic here ensures that we don't accidentally set
+    // a form value when the only input was this programaticaly added currency symbol.
+    const valueIsNotCurrencySymbol = !currencySymbol || inputValue !== currencySymbol.trim();
+
+    const numericValue = (inputValue && valueIsNotCurrencySymbol)
       ? this.autonumericInstance.getNumber()
       : undefined;
 
-      return numericValue;
+    return numericValue;
   }
 
   private getInputValue(): string {
