@@ -26,9 +26,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutonumericFixtureComponent {
-  public useDefaultDebounce: boolean = true;
-  public customDebounceTime: number = 250;
-
   @ViewChild(SkyAutonumericDirective)
   public autonumericDirective: SkyAutonumericDirective;
 
@@ -36,12 +33,13 @@ export class AutonumericFixtureComponent {
   public donationAmountTemplateDriven: NgModel;
 
   public autonumericOptions: SkyAutonumericOptions;
+  public useDefaultDebounce: boolean = true;
+  public customDebounceTime: number = 250;
+  public required: boolean;
 
   public formGroup: FormGroup = this.formBuilder.group({
-    donationAmount: new FormControl(),
-    donationAmountWithDebounce: new FormControl()
+    donationAmount: new FormControl()
   });
-
   public templateDrivenModel: any = {
     donationAmount: 1000
   };
@@ -49,12 +47,6 @@ export class AutonumericFixtureComponent {
   public get formControl(): AbstractControl {
     return this.formGroup.get('donationAmount');
   }
-
-  public get formControlWithDebounce(): AbstractControl {
-    return this.formGroup.get('donationAmountWithDebounce');
-  }
-
-  public required: boolean;
 
   constructor(
     private formBuilder: FormBuilder
