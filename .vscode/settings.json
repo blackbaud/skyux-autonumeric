@@ -30,6 +30,6 @@
     140
   ],
   "editor.codeActionsOnSave": {
-    "source.fixAll.tslint": false
+    "source.fixAll.tslint": true
   }
 }
