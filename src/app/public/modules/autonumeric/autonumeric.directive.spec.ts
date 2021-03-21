@@ -103,28 +103,9 @@ describe('Autonumeric directive', () => {
     SkyAppTestUtility.fireDomEvent(getTemplateInputByClass(), 'keyup');
   }
 
-  function triggerInput(): void {
-    SkyAppTestUtility.fireDomEvent(getReactiveInputByClass(), 'input');
-    SkyAppTestUtility.fireDomEvent(getTemplateInputByClass(), 'input');
-  }
-
-  /** Mocks typing a number into the input element. */
-  function simulateTyping(numberToType: number): void {
-    let s = '';
-
-    const inputs: HTMLInputElement[] = fixture.nativeElement.querySelectorAll('input');
-    inputs[0].value = '';
-    inputs[1].value = '';
-    triggerInput();
-    triggerKeyUp();
-
-    for (let ch of numberToType.toString().split('')) {
-      s += ch;
-      inputs[0].value = s;
-      inputs[1].value = s;
-      triggerInput();
-      triggerKeyUp();
-    }
+  function triggerInput(value: string): void {
+    SkyAppTestUtility.setInputValue(getReactiveInputByClass(), value);
+    SkyAppTestUtility.setInputValue(getTemplateInputByClass(), value);
   }
 
   /**
@@ -266,6 +247,21 @@ describe('Autonumeric directive', () => {
     });
 
     describe('keyup debounce time', () => {
+     /** Mocks typing a number into the input element. */
+    function simulateKeyPresses(numberToType: number): void {
+      let s = '';
+      triggerInput('');
+      triggerKeyUp();
+
+      for (let ch of numberToType.toString().split('')) {
+        s += ch;
+        triggerInput(s);
+        triggerKeyUp();
+      }
+
+      setValue(numberToType);
+    }
+
       function testDebounceTime(useDefaultDebounce: boolean, debounceTime: number) {
         fixture.componentInstance.useDefaultDebounce = useDefaultDebounce;
         if (useDefaultDebounce === false) {
@@ -276,7 +272,7 @@ describe('Autonumeric directive', () => {
         const autonumericInstance = fixture.componentInstance.autonumericDirective['autonumericInstance'];
         const spy = spyOn(autonumericInstance, 'getNumber').and.callThrough();
 
-        simulateTyping(1234.56);
+        simulateKeyPresses(1234.56);
 
         // wait up to 1 second before the event is supposed to be debounced
         detectChanges(debounceTime - 1);
@@ -287,6 +283,10 @@ describe('Autonumeric directive', () => {
         expect(spy).toHaveBeenCalled();
 
         expect(spy).toHaveBeenCalledTimes(1);
+        const modelValue = getModelValue();
+        const formattedValue = getFormattedValue();
+        expect(modelValue).toBe(1234.56);
+        expect(formattedValue).toBe('1,234.56');
       }
 
       it('should default debounceTime to 250ms', fakeAsync(() => testDebounceTime(true, 250)));
