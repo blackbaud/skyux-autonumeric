@@ -84,7 +84,7 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
   }
 
   /**
-   * Specifies how many milliseconds to wait before searching after users enter text in the search input.
+   * Specifies how many milliseconds to wait before emitting a change event.
    * @default 250
    */
   @Input() public skyAutonumericDebounceTime: number = 250;
