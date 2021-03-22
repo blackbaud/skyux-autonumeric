@@ -3,6 +3,10 @@ import {
 } from '@angular/core';
 
 import {
+  CommonModule
+} from '@angular/common';
+
+import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
@@ -14,7 +18,6 @@ import {
 import {
   AutonumericFixtureComponent
 } from './autonumeric.component.fixture';
-import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [

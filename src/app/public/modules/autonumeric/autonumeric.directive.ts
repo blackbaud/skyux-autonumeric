@@ -11,11 +11,13 @@ import {
 } from '@angular/core';
 
 import {
-  fromEvent, Subject
+  fromEvent,
+  Subject
 } from 'rxjs';
 
 import {
-  debounceTime, takeUntil
+  debounceTime,
+  takeUntil
 } from 'rxjs/operators';
 
 import {
