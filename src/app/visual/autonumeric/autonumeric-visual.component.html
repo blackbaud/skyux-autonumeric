@@ -6,30 +6,31 @@
   <form
     [formGroup]="formGroup"
     novalidate
+    style="display: flex; flex-flow: row;"
   >
-    <input
-      class="sky-form-control"
-      formControlName="donationAmount"
-      type="text"
-      [skyAutonumeric]="autonumericOptions"
-    />
-  </form>
+    <div class="sky-form-group sky-margin-inline-default">
+      <label class="sky-control-label">Default debounce time</label>
+      <input
+        class="sky-form-control"
+        formControlName="donationAmount"
+        type="text"
+        [skyAutonumeric]="autonumericOptions"
+      />
+      <form-control-viewer [control]="formGroup.controls.donationAmount"></form-control-viewer>
+    </div>
 
-  <div>
-    Value: {{formGroup.controls.donationAmount.value}}
-  </div>
-  <div>
-    Dirty: {{formGroup.controls.donationAmount.dirty}}
-  </div>
-  <div>
-    Pristine: {{formGroup.controls.donationAmount.pristine}}
-  </div>
-  <div>
-    Touched: {{formGroup.controls.donationAmount.touched}}
-  </div>
-  <div>
-    Valid: {{formGroup.controls.donationAmount.valid}}
-  </div>
+    <div class="sky-form-group">
+      <label class="sky-control-label">Configurable debounce time (0 ms)</label>
+      <input
+        class="sky-form-control"
+        formControlName="debouncedAmount"
+        type="text"
+        [skyAutonumeric]="autonumericOptions"
+        skyAutonumericDebounceTime="0"
+      />
+      <form-control-viewer [control]="formGroup.controls.debouncedAmount"></form-control-viewer>
+    </div>
+  </form>
 
   <h2>
     Template-driven form
@@ -37,34 +38,37 @@
 
   <form
     #templateDrivenForm="ngForm"
+    style="display: flex; flex-flow: row;"
   >
-    <input
-      class="sky-form-control"
-      name="donationAmount"
-      required
-      type="text"
-      [disabled]="disabled"
-      [skyAutonumeric]="autonumericOptions"
-      [(ngModel)]="templateDrivenModel.donationAmount"
-      #donationAmount="ngModel"
-    />
+    <div class="sky-form-group sky-margin-inline-default">
+      <label class="sky-control-label">Default debounce time</label>
+      <input
+        class="sky-form-control"
+        name="donationAmount"
+        required
+        type="text"
+        [disabled]="disabled"
+        [skyAutonumeric]="autonumericOptions"
+        [(ngModel)]="templateDrivenModel.donationAmount"
+        #donationAmount="ngModel"
+      />
+      <form-control-viewer [control]="donationAmount"></form-control-viewer>
+    </div>
+    <div class="sky-form-group sky-margin-inline-default">
+      <label class="sky-control-label">Configurable debounce time (0ms)</label>
+      <input
+        class="sky-form-control"
+        name="debouncedDonationAmount"
+        required
+        type="text"
+        [disabled]="disabled"
+        [skyAutonumeric]="autonumericOptions"
+        [(ngModel)]="templateDrivenModel.debouncedDonationAmount"
+        #debouncedDonationAmount="ngModel"
+      />
+      <form-control-viewer [control]="debouncedDonationAmount"></form-control-viewer>
+    </div>
   </form>
-
-  <div>
-    Value: {{ donationAmount.value }}
-  </div>
-  <div>
-    Dirty: {{ donationAmount.dirty }}
-  </div>
-  <div>
-    Pristine: {{ donationAmount.pristine }}
-  </div>
-  <div>
-    Touched: {{ donationAmount.touched }}
-  </div>
-  <div>
-    Valid: {{ donationAmount.valid }}
-  </div>
 
   <h2>
     Modify value and state

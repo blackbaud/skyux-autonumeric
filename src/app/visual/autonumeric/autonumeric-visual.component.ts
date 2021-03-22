@@ -49,7 +49,8 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
   public formGroup: FormGroup;
 
   public templateDrivenModel: any = {
-    donationAmount: 1000
+    donationAmount: 1000,
+    debouncedDonationAmount: 1000
   };
 
   private ngUnsubscribe = new Subject<void>();
@@ -60,7 +61,8 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
-      donationAmount: new FormControl(1000, [Validators.required])
+      donationAmount: new FormControl(1000, [Validators.required]),
+      debouncedAmount: new FormControl(1000, [Validators.required])
     });
 
     this.formGroup.get('donationAmount').valueChanges
@@ -69,6 +71,14 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
       )
       .subscribe((value) => {
         console.log('Value changed:', value);
+      });
+
+    this.formGroup.get('debouncedAmount').valueChanges
+      .pipe(
+        takeUntil(this.ngUnsubscribe)
+      )
+      .subscribe((value) => {
+        console.log('Debounced value changed:', value);
       });
   }
 
@@ -79,14 +89,17 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
 
   public setValue(): void {
     this.formGroup.setValue({
-      donationAmount: 3756.8
+      donationAmount: 3756.8,
+      debouncedAmount: 3756.8
     });
     this.templateDrivenModel.donationAmount = 3756.8;
+    this.templateDrivenModel.debouncedAmount = 3756.8;
   }
 
   public clearValue(): void {
     this.formGroup.reset();
     this.templateDrivenModel.donationAmount = undefined;
+    this.templateDrivenModel.debouncedAmount = undefined;
   }
 
   public setOptions(): void {
@@ -103,8 +116,10 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
     this.disabled = !this.disabled;
     if (this.disabled) {
       this.formGroup.get('donationAmount').disable();
+      this.formGroup.get('debouncedAmount').disable();
     } else {
       this.formGroup.get('donationAmount').enable();
+      this.formGroup.get('debouncedAmount').enable();
     }
   }
 }
