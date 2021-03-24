@@ -7,7 +7,7 @@ import { SkyCurrencyFormat, SkyI18nSkyCurrencyFormatService } from './MOCK-curre
 type IsoCodeAndLocale = { isoCode: string; locale: string };
 
 /**
- * Service to get a currency's format given an iso code.
+ * Service to map a locale + iso code to an Autonumeric Config
  */
 @Injectable({
   providedIn: 'root'
