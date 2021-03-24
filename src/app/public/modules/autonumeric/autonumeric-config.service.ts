@@ -12,7 +12,7 @@ type IsoCodeAndLocale = { isoCode: string; locale: string };
 @Injectable({
   providedIn: 'root'
 })
-export class AutonumericConfigService {
+export class SkyAutonumericConfigService {
   constructor(private currencyFormatService: SkyI18nSkyCurrencyFormatService) { }
 
   /**
