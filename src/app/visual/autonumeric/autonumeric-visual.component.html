@@ -66,22 +66,41 @@
     Valid: {{ donationAmount.valid }}
   </div>
 
-  <!-- Currency Example - https://github.com/blackbaud/skyux-autonumeric/issues/17 -->
+  <!--
+    Currency Example - https://github.com/blackbaud/skyux-autonumeric/issues/17
+  -->
   <div>
-    <h2>Currency example</h2>
-    <form [formGroup]="formGroup">
+    <h2>
+      Currency example
+    </h2>
+    <form
+      [formGroup]="formGroup"
+    >
       <input
         class="sky-form-control"
         formControlName="currency"
         type="text"
-        [skyAutonumeric]="{ currencySymbol: '$', decimalPlaces: 2 }"
+        [skyAutonumeric]="{
+          currencySymbol: '$',
+          decimalPlaces: 2
+        }"
       />
     </form>
-    <div>Value: {{formGroup.controls.currency.value}}</div>
-    <div>Dirty: {{formGroup.controls.currency.dirty}}</div>
-    <div>Pristine: {{formGroup.controls.currency.pristine}}</div>
-    <div>Touched: {{formGroup.controls.currency.touched}}</div>
-    <div>Valid: {{formGroup.controls.currency.valid}}</div>
+    <div>
+      Value: {{formGroup.controls.currency.value}}
+    </div>
+    <div>
+      Dirty: {{formGroup.controls.currency.dirty}}
+    </div>
+    <div>
+      Pristine: {{formGroup.controls.currency.pristine}}
+    </div>
+    <div>
+      Touched: {{formGroup.controls.currency.touched}}
+    </div>
+    <div>
+      Valid: {{formGroup.controls.currency.valid}}
+    </div>
   </div>
 
   <h2>
@@ -124,7 +143,9 @@
     class="sky-btn"
     type="button"
     (click)="setOptionsToCustom()"
-  >Set options to custom</button>
+  >
+    Set options to custom
+  </button>
 
   <button
     class="sky-btn"

@@ -5,13 +5,14 @@ import {
   forwardRef,
   HostListener,
   Input,
+  OnDestroy,
   OnInit,
-  Renderer2,
-  OnDestroy
+  Renderer2
 } from '@angular/core';
 
 import {
-  fromEvent, Subject
+  fromEvent,
+  Subject
 } from 'rxjs';
 
 import {
@@ -28,7 +29,7 @@ import {
 } from '@angular/forms';
 
 import AutoNumeric, {
-  Options
+  Options as AutoNumericOptions
 } from 'autonumeric';
 
 import {
@@ -39,7 +40,7 @@ import {
   SkyAutonumericOptionsProvider
 } from './autonumeric-options-provider';
 
-// tslint:disable:no-forward-ref
+// tslint:disable:no-forward-ref no-use-before-declare
 const SKY_AUTONUMERIC_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => SkyAutonumericDirective),
@@ -51,7 +52,7 @@ const SKY_AUTONUMERIC_VALIDATOR = {
   useExisting: forwardRef(() => SkyAutonumericDirective),
   multi: true
 };
-// tslint:enable:no-forward-ref
+// tslint:enable
 
   /**
    * Wraps the [`autoNumeric` utility](https://github.com/autoNumeric/autoNumeric) to format
@@ -75,29 +76,28 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
     this.updateAutonumericInstance();
   }
 
-  private nativeElement: HTMLInputElement;
   private autonumericInstance: AutoNumeric;
   private autonumericOptions: SkyAutonumericOptions;
   private control: AbstractControl;
   private isFirstChange = true;
   private value: number;
-  private onDestroy$: Subject<void> = new Subject();
+
+  private ngUnsubscribe = new Subject<void>();
 
   constructor(
-    elementRef: ElementRef,
+    private elementRef: ElementRef,
     private globalConfig: SkyAutonumericOptionsProvider,
     private renderer: Renderer2,
     private changeDetector: ChangeDetectorRef
   ) {
-    this.nativeElement = elementRef.nativeElement;
     this.createAutonumericInstance();
   }
 
   public ngOnInit(): void {
     this.updateAutonumericInstance();
 
-    fromEvent(this.nativeElement, 'keyup')
-      .pipe(takeUntil(this.onDestroy$))
+    fromEvent(this.elementRef.nativeElement, 'keyup')
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(() => {
         const numericValue: number | undefined = this.getNumericValue();
 
@@ -117,24 +117,24 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
   }
 
   public ngOnDestroy(): void {
-    this.onDestroy$.next();
-    this.onDestroy$.complete();
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   /**
-   * Function that is called by the forms API when the control status changes to or from 'DISABLED'.
-   * Depending on the status, it enables or disables the appropriate DOM element.
+   * Implemented as part of ControlValueAccessor.
    */
-  public setDisabledState(isDisabled: boolean): void {
-    this.renderer.setProperty(this.nativeElement, 'disabled', isDisabled);
+  public setDisabledState(value: boolean): void {
+    this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', value);
   }
 
-  /** This method is called by the forms API to write to the view when programmatic changes from model to view are requested. */
   public writeValue(value: number): void {
+
     if (this.value !== value) {
       this.value = value;
       this.onChange(value);
 
+      // Mark the control as "pristine" if it is initialized with a value.
       const initializedWithValue = this.isFirstChange && this.control && this.value !== null;
       if (initializedWithValue) {
         this.isFirstChange = false;
@@ -142,7 +142,7 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
       }
     }
 
-    const isNumber: boolean = typeof value === 'number' && value !== null && value !== undefined;
+    const isNumber = typeof value === 'number' && value !== null && value !== undefined;
     if (isNumber) {
       this.autonumericInstance.set(value);
     } else {
@@ -150,7 +150,6 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
     }
   }
 
-  /** Method that performs synchronous validation against the provided control. */
   public validate(control: AbstractControl): ValidationErrors | null {
     const noErrors: null = null; // tslint:disable-line: no-null-keyword
 
@@ -171,12 +170,10 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
     return noErrors;
   }
 
-  /** Registers a callback function that is called when the control's value changes in the UI. */
   public registerOnChange(fn: (value: number) => void): void {
     this.onChange = fn;
   }
 
-  /** Registers a callback function that is called by the forms API on initialization to update the form model on blur. */
   public registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
@@ -187,8 +184,8 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
   }
 
   private getNumericValue(): number | undefined {
-    const inputValue: string = this.getInputValue();
-    const numericValue: number | undefined = (inputValue && !this.isInputValueTheCurrencySymbol(inputValue))
+    const inputValue = this.getInputValue();
+    const numericValue = (inputValue && !this.isInputValueTheCurrencySymbol(inputValue))
       ? this.autonumericInstance.getNumber()
       : undefined;
 
@@ -198,28 +195,24 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
   /**
    * Due to AutoNumeric's hover logic - when AutoNumeric has a currency symbol the value
    * that we get back on empty fields will be the currency symbol.
-   *
-   * This currency symbol logic ensures that we don't accidentally set
-   * a form value when the only input was this programaticaly added currency symbol.
-   * @param inputValue
+   * The following logic ensures that we don't accidentally set
+   * a form value when the only input was the programatically-added currency symbol.
    */
   private isInputValueTheCurrencySymbol(inputValue: string): boolean {
-    const options: Record<string, any> = this.autonumericOptions as Record<string, any>;
-    const currencySymbol: string = options?.currencySymbol ?? '';
-
-    return currencySymbol && inputValue === currencySymbol.trim();
+    const currencySymbol = ((this.autonumericOptions as AutoNumericOptions)?.currencySymbol ?? '').trim();
+    return (currencySymbol && inputValue === currencySymbol);
   }
 
   private getInputValue(): string {
-    return this.nativeElement.value;
+    return this.elementRef.nativeElement.value;
   }
 
   private createAutonumericInstance(): void {
-    this.autonumericInstance = new AutoNumeric(this.nativeElement);
+    this.autonumericInstance = new AutoNumeric(this.elementRef.nativeElement);
   }
 
   private updateAutonumericInstance(): void {
-    this.autonumericInstance.update(this.autonumericOptions as Options);
+    this.autonumericInstance.update(this.autonumericOptions as AutoNumericOptions);
   }
 
   private mergeOptions(value: SkyAutonumericOptions): SkyAutonumericOptions {
@@ -228,7 +221,7 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
     let newOptions: SkyAutonumericOptions = {};
     if (typeof value === 'string') {
       const predefinedOptions = AutoNumeric.getPredefinedOptions();
-      newOptions = predefinedOptions[value as keyof Options] as Options;
+      newOptions = predefinedOptions[value as keyof AutoNumericOptions] as AutoNumericOptions;
     } else {
       newOptions = value;
     }
@@ -240,11 +233,8 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
     );
   }
 
-  /** Function to call when the value changes. */
   /* istanbul ignore next */
   private onChange = (_: number) => { };
-
-  /** Function to call when the input is touched. */
   /* istanbul ignore next */
   private onTouched = () => { };
 }

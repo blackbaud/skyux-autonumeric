@@ -60,8 +60,7 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
-      // tslint:disable-next-line: no-null-keyword
-      currency: new FormControl(null, [Validators.required]),
+      currency: new FormControl(undefined, [Validators.required]),
       donationAmount: new FormControl(1000, [Validators.required])
     });
 
