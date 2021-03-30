@@ -122,22 +122,19 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
   }
 
   /**
-   * Implemented as part of ControlValueAccessor.
+   * Function that is called by the forms API when the control status changes to or from 'DISABLED'.
+   * Depending on the status, it enables or disables the appropriate DOM element.
    */
-  public setDisabledState(value: boolean): void {
-    this.renderer.setProperty(this.nativeElement, 'disabled', value);
+  public setDisabledState(isDisabled: boolean): void {
+    this.renderer.setProperty(this.nativeElement, 'disabled', isDisabled);
   }
 
-  /**
-   * This method is called by the forms API to write to the
-   * view when programmatic changes from model to view are requested.
-   */
+  /** This method is called by the forms API to write to the view when programmatic changes from model to view are requested. */
   public writeValue(value: number): void {
     if (this.value !== value) {
       this.value = value;
       this.onChange(value);
 
-      // Mark the control as "pristine" if it is initialized with a value.
       const initializedWithValue = this.isFirstChange && this.control && this.value !== null;
       if (initializedWithValue) {
         this.isFirstChange = false;
