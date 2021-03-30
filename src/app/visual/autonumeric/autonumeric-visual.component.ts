@@ -60,6 +60,8 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
+      // tslint:disable-next-line: no-null-keyword
+      currency: new FormControl(null, [Validators.required]),
       donationAmount: new FormControl(1000, [Validators.required])
     });
 
@@ -97,6 +99,14 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
 
   public setOptionsByPreset(): void {
     this.autonumericOptions = 'Chinese';
+  }
+
+  public setOptionsToCustom(): void {
+    this.autonumericOptions = {
+      currencySymbol: '#',
+      currencySymbolPlacement: 's',
+      decimalPlaces: 3
+    };
   }
 
   public onDisableClick(): void {
