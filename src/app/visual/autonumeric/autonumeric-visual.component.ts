@@ -80,7 +80,8 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
 
   public setValue(): void {
     this.formGroup.setValue({
-      donationAmount: 3756.8
+      donationAmount: 3756.8,
+      currency: 18.99
     });
     this.templateDrivenModel.donationAmount = 3756.8;
   }
