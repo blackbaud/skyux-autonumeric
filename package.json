@@ -1,6 +1,6 @@
 {
   "name": "@skyux/autonumeric",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Library for skyux-lib-autonumeric",
   "scripts": {
     "build": "skyux build-public-library",
