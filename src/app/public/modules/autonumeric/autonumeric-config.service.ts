@@ -11,8 +11,6 @@ import {
   SkyI18nCurrencyFormatService
 } from '@skyux/i18n';
 
-type IsoCodeAndLocale = { isoCode: string; locale: string };
-
 /**
  * Service to map a locale + iso code to an Autonumeric Config
  */
@@ -25,12 +23,11 @@ export class SkyAutonumericConfigService {
   /**
    * Creates an Autonumeric Config from a Locale and Currency Code.
    * http://autonumeric.org/guide
-   * @param params optional params object
-   * @param params.isoCode the ISO 4217 Code.
-   * @param params.locale the Locale.
+   * @param isoCurrencyCode — the ISO 4217 Currency Code. Defaults to 'USD'.
+   * @param locale — the locale. Defaults to 'en-US'. Examples: 'en-US', 'en-GB', 'fr-FR'.
    */
-  public getAutonumericConfig(params?: Partial<IsoCodeAndLocale>): AutonumericOptions {
-    const format = this.currencyFormatService.getCurrencyFormat(params.isoCode, params.locale);
+  public getAutonumericConfig(isoCurrencyCode?: string, locale?: string): AutonumericOptions {
+    const format = this.currencyFormatService.getCurrencyFormat(isoCurrencyCode, locale);
     return this.mapFromFormatToAutonumericOptions(format);
   }
 
