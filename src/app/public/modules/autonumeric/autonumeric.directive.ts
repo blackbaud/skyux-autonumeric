@@ -70,16 +70,27 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
 
   /**
    * Assigns the name of a property from `SkyAutonumericOptionsProvider`.
+   * Exclusive to the IsoCurrencyCodeAndLocale Input.
    */
   @Input()
   public set skyAutonumeric(value: SkyAutonumericOptions) {
-    this.autonumericConfigService.getAutonumericOptions(value).pipe(
+    this.autonumericOptions = this.autonumericConfigService.getAutonumericOptions(value);
+    this.updateAutonumericInstance();
+  }
+
+  /**
+   * Formats a Currency based off a given ISO Currency Code and Locale.
+   * Exclusive to the skyAutonumeric Input.
+   */
+  @Input()
+  public set isoCurrencyCodeAndLocale(value: { isoCurrencyCode: string, locale?: string }) {
+    this.autonumericConfigService.getAutonumericOptionsForCurrencyAndLocaleMode(value.isoCurrencyCode, value.locale).pipe(
       tap(options => this.autonumericOptions = options)
     ).subscribe(() => this.updateAutonumericInstance());
   }
 
   private autonumericInstance: AutoNumeric;
-  private autonumericOptions: SkyAutonumericOptions;
+  private autonumericOptions: AutoNumericOptions;
   private control: AbstractControl;
   private isFirstChange = true;
   private value: number;

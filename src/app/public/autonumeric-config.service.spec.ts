@@ -7,6 +7,10 @@ import {
 } from '@skyux-sdk/testing';
 
 import {
+  Options as AutonumericOptions
+} from 'autonumeric';
+
+import {
   SkyAutonumericConfigService
 } from './modules/autonumeric/autonumeric-config.service';
 
@@ -35,37 +39,42 @@ describe('SkyAutonumericConfigService', () => {
     globalOptionsProvider = TestBed.inject(SkyAutonumericOptionsProvider);
   });
 
-  function getAutonumericOptions(options?: SkyAutonumericOptions): Promise<SkyAutonumericOptions> {
-    return service.getAutonumericOptions(options).toPromise();
-  }
-
   describe('getAutonumericOptions', () => {
-    it('should respect and prioritize global options', async () => {
-      spyOn(globalOptionsProvider, 'getConfig')
-        .and
-        .returnValue({ currencySymbol: '#' });
+    it('should respect and prioritize global options', () => {
+      spyOn(globalOptionsProvider, 'getConfig').and.returnValue({ currencySymbol: '#' });
 
-      const option = await getAutonumericOptions(undefined);
-      expect((option as any).currencySymbol).toBe('#');
+      const option: AutonumericOptions = service.getAutonumericOptions(undefined);
+      expect(option.currencySymbol).toBe('#');
     });
-    it('should allow no options to be passed', async () => {
-      const option = await getAutonumericOptions();
+    it('should allow no options to be passed', () => {
+      const option = service.getAutonumericOptions();
       expect(option).toBeDefined();
     });
-    it('should handle Autonumeric predefined language options', async () => {
-      const option = await getAutonumericOptions('French');
+    it('should handle Autonumeric predefined language options', () => {
+      const option = service.getAutonumericOptions('French');
       expect(option).toBeDefined();
     });
-    it('should handle Autonumeric predefined common options', async () => {
-      const option = await getAutonumericOptions('integer');
+    it('should handle Autonumeric predefined common options', () => {
+      const option = service.getAutonumericOptions('integer');
       expect(option).toBeDefined();
     });
-    it('should handle custom Autonumeric options', async () => {
-      const option = await getAutonumericOptions({ currencySymbol: '$' });
+    it('should handle custom Autonumeric options', () => {
+      const option = service.getAutonumericOptions({ currencySymbol: '$' });
       expect(option).toBeDefined();
     });
-    it('should handle custom "Currency and Locale" options', async () => {
-      const option = await getAutonumericOptions({ isoCurrencyCode: 'USD', locale: 'en-CA' });
+  });
+
+  describe('createOptionsForCurrencyAndLocaleMode', () => {
+    it('should handle custom "Currency and Locale" options when code and locale are passed', async () => {
+      const option = await service.getAutonumericOptionsForCurrencyAndLocaleMode('USD', 'en-CA').toPromise();
+      expect(option).toBeDefined();
+    });
+    it('should handle custom "Currency and Locale" options when only code is passed', async () => {
+      const option = await service.getAutonumericOptionsForCurrencyAndLocaleMode('CAD').toPromise();
+      expect(option).toBeDefined();
+    });
+    it('should handle custom "Currency and Locale" options whe nothing is passed', async () => {
+      const option = await service.getAutonumericOptionsForCurrencyAndLocaleMode().toPromise();
       expect(option).toBeDefined();
     });
   });

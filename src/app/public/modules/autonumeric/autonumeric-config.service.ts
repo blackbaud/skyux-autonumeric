@@ -33,11 +33,12 @@ import {
 } from './autonumeric-options-provider';
 
 import {
-  isPredefinedAutoNumericOption, isCurrencyFormatOption
+  isPredefinedAutoNumericOption
 } from './option-guards';
 
 /**
- * Service to map a locale + iso code to an Autonumeric Config
+ * Helper service to create autonumeric options.
+ * @internal
  */
 @Injectable({
   providedIn: 'root'
@@ -54,27 +55,10 @@ export class SkyAutonumericConfigService {
    * Merges custom AutoNumeric options with the globally defined AutoNumeric options.
    * @param options
    */
-  public getAutonumericOptions(value?: SkyAutonumericOptions): Observable<SkyAutonumericOptions> {
-    const options$ = this.parseOptions(value);
+  public getAutonumericOptions(value?: SkyAutonumericOptions): AutonumericOptions {
+    const options = this.parseOptions(value);
 
-    return options$.pipe(
-      map(options => this.mergeWithGlobalConfig(options))
-    );
-  }
-
-  private parseOptions(options?: SkyAutonumericOptions): Observable<AutonumericOptions> {
-    options = options ?? {};
-
-    if (isPredefinedAutoNumericOption(options)) {
-      const predefinedOptions = AutoNumeric.getPredefinedOptions();
-      return of(predefinedOptions[options as keyof AutonumericOptions] as AutonumericOptions);
-    }
-
-    if (isCurrencyFormatOption(options)) {
-      return this.getCurrencyConfig(options.isoCurrencyCode, options.locale);
-    }
-
-    return of(options); // custom options
+    return this.mergeWithGlobalConfig(options);
   }
 
   /**
@@ -83,8 +67,8 @@ export class SkyAutonumericConfigService {
    * @param isoCurrencyCode — the ISO 4217 Currency Code.
    * @param locale — the locale. Defaults to 'en-US'.
    */
-  private getCurrencyConfig(isoCurrencyCode?: string, locale?: string): Observable<AutonumericOptions> {
-    const skyLocale$ = this.localeProvider.getLocaleInfo().pipe(
+  public getAutonumericOptionsForCurrencyAndLocaleMode(isoCurrencyCode?: string, locale?: string): Observable<AutonumericOptions> {
+    const skyLocale$: Observable<string> = this.localeProvider.getLocaleInfo().pipe(
       take(1),
       map(localeResp => localeResp.locale)
     );
@@ -99,12 +83,22 @@ export class SkyAutonumericConfigService {
       map(newLocale => {
         const format = this.currencyFormatService.getCurrencyFormat(isoCurrencyCode, newLocale);
         return this.mapFromCurrencyFormatToAutoNumericOptions(format);
-      })
+      }),
+      map(options => this.mergeWithGlobalConfig(options))
     );
   }
 
+  private parseOptions(options: SkyAutonumericOptions = {}): AutonumericOptions {
+    if (isPredefinedAutoNumericOption(options)) {
+      const option = this.getPredefinedOptionObject(options);
+      return option;
+    }
+
+    return options;
+  }
+
   /**
-   * Maps to Autonumeric options.
+   * Maps a Currency+Local Format to Autonumeric options.
    * @param currencyFormat
    *
    * @see [skyux-autonumeric](https://github.com/blackbaud/skyux-autonumeric)
@@ -128,10 +122,18 @@ export class SkyAutonumericConfigService {
     return options;
   }
 
-  private mergeWithGlobalConfig(options: SkyAutonumericOptions) {
-    const globalOptions = this.globalConfig.getConfig();
+  private getPredefinedOptionObject(predefinedOption: string | keyof AutoNumeric.PredefinedOptions): AutonumericOptions {
+    const predefinedOptions = AutoNumeric.getPredefinedOptions();
+    const option = predefinedOptions[predefinedOption as keyof AutonumericOptions] as AutonumericOptions;
 
-    return Object.assign({}, globalOptions, options);
+    return option;
+  }
+
+  private mergeWithGlobalConfig(options: SkyAutonumericOptions): AutonumericOptions {
+    const globalConfig = this.globalConfig.getConfig();
+    const parseGlobalOptions: AutonumericOptions = this.parseOptions(globalConfig);
+
+    return Object.assign({}, parseGlobalOptions, options);
   }
 
 }

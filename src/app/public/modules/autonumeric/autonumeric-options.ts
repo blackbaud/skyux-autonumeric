@@ -10,7 +10,6 @@ import AutoNumeric, {
  * [custom set of options](https://github.com/autoNumeric/autoNumeric#options)
  * that override any default options that the `skyAutonumeric` attribute specifies.
  */
-export type SkyAutonumericOptions = PredefinedAutonumericOption | AutonumericOptions | CurrencyAndLocale;
+export type SkyAutonumericOptions = PredefinedAutonumericOption | AutonumericOptions;
 
 type PredefinedAutonumericOption = string | keyof AutoNumeric.PredefinedOptions;
-type CurrencyAndLocale = { isoCurrencyCode: string, locale?: string };
