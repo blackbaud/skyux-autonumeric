@@ -2,14 +2,39 @@ import {
   Injectable
 } from '@angular/core';
 
-import {
+import AutoNumeric, {
   Options as AutonumericOptions
 } from 'autonumeric';
 
 import {
+  Observable,
+  of,
+  iif,
+  defer
+} from 'rxjs';
+
+import {
+  map,
+  take
+} from 'rxjs/operators';
+
+import {
   SkyI18nCurrencyFormat,
-  SkyI18nCurrencyFormatService
+  SkyI18nCurrencyFormatService,
+  SkyAppLocaleProvider
 } from '@skyux/i18n';
+
+import {
+  SkyAutonumericOptions
+} from './autonumeric-options';
+
+import {
+  SkyAutonumericOptionsProvider
+} from './autonumeric-options-provider';
+
+import {
+  isPredefinedAutoNumericOption, isCurrencyFormatOption
+} from './option-guards';
 
 /**
  * Service to map a locale + iso code to an Autonumeric Config
@@ -18,17 +43,62 @@ import {
   providedIn: 'root'
 })
 export class SkyAutonumericConfigService {
-  constructor(private currencyFormatService: SkyI18nCurrencyFormatService) { }
+
+  constructor(
+    private globalConfig: SkyAutonumericOptionsProvider,
+    private currencyFormatService: SkyI18nCurrencyFormatService,
+    private localeProvider: SkyAppLocaleProvider
+  ) { }
+
+  /**
+   * Merges custom AutoNumeric options with the globally defined AutoNumeric options.
+   * @param options
+   */
+  public getAutonumericOptions(value: SkyAutonumericOptions): Observable<SkyAutonumericOptions> {
+    const options$ = this.parseOptions(value);
+
+    return options$.pipe(
+      map(options => this.mergeWithGlobalConfig(options))
+    );
+  }
+
+  private parseOptions(options: SkyAutonumericOptions): Observable<AutonumericOptions> {
+    if (isPredefinedAutoNumericOption(options)) {
+      const predefinedOptions = AutoNumeric.getPredefinedOptions();
+      return of(predefinedOptions[options as keyof AutonumericOptions] as AutonumericOptions);
+    }
+
+    if (isCurrencyFormatOption(options)) {
+      return this.getCurrencyConfig(options.isoCurrencyCode, options.locale);
+    }
+
+    return of(options); // custom options
+  }
 
   /**
    * Creates an Autonumeric Config from a Locale and Currency Code.
    * http://autonumeric.org/guide
-   * @param isoCurrencyCode — the ISO 4217 Currency Code. Defaults to 'USD'.
-   * @param locale — the locale. Defaults to 'en-US'. Examples: 'en-US', 'en-GB', 'fr-FR'.
+   * @param isoCurrencyCode — the ISO 4217 Currency Code.
+   * @param locale — the locale. Defaults to 'en-US'.
    */
-  public getAutonumericConfig(isoCurrencyCode?: string, locale?: string): AutonumericOptions {
-    const format = this.currencyFormatService.getCurrencyFormat(isoCurrencyCode, locale);
-    return this.mapFromFormatToAutonumericOptions(format);
+  private getCurrencyConfig(isoCurrencyCode?: string, locale?: string): Observable<AutonumericOptions> {
+    const skyLocale$ = this.localeProvider.getLocaleInfo().pipe(
+      take(1),
+      map(localeResp => localeResp.locale)
+    );
+
+    const locale$: Observable<string> = iif(
+      () => locale === undefined,
+      defer(() => skyLocale$),
+      of(locale)
+    );
+
+    return locale$.pipe(
+      map(newLocale => {
+        const format = this.currencyFormatService.getCurrencyFormat(isoCurrencyCode, newLocale);
+        return this.mapFromCurrencyFormatToAutoNumericOptions(format);
+      })
+    );
   }
 
   /**
@@ -38,7 +108,7 @@ export class SkyAutonumericConfigService {
    * @see [skyux-autonumeric](https://github.com/blackbaud/skyux-autonumeric)
    * @see [AutoNumeric.js](http://autonumeric.org/guide)
    */
-  private mapFromFormatToAutonumericOptions(format: SkyI18nCurrencyFormat): AutonumericOptions {
+  private mapFromCurrencyFormatToAutoNumericOptions(format: SkyI18nCurrencyFormat): AutonumericOptions {
     const options: AutonumericOptions = {
       currencySymbol: format.symbol,
       currencySymbolPlacement: format.symbolLocation === 'suffix' ? 's' : 'p',
@@ -54,6 +124,12 @@ export class SkyAutonumericConfigService {
     }
 
     return options;
+  }
+
+  private mergeWithGlobalConfig(options: SkyAutonumericOptions) {
+    const globalOptions = this.globalConfig.getConfig();
+
+    return Object.assign({}, globalOptions, options);
   }
 
 }

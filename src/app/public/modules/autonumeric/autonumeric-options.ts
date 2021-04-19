@@ -1,5 +1,5 @@
 import AutoNumeric, {
-  Options
+  Options as AutonumericOptions
 } from 'autonumeric';
 
 /**
@@ -10,4 +10,7 @@ import AutoNumeric, {
  * [custom set of options](https://github.com/autoNumeric/autoNumeric#options)
  * that override any default options that the `skyAutonumeric` attribute specifies.
  */
-export type SkyAutonumericOptions = string | keyof AutoNumeric.PredefinedOptions | Options;
+export type SkyAutonumericOptions = PredefinedAutonumericOption | AutonumericOptions | CurrencyAndLocale;
+
+type PredefinedAutonumericOption = string | keyof AutoNumeric.PredefinedOptions;
+type CurrencyAndLocale = { isoCurrencyCode: string, locale?: string };

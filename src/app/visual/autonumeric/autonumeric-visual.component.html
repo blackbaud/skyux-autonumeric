@@ -80,10 +80,7 @@
         class="sky-form-control"
         formControlName="currency"
         type="text"
-        [skyAutonumeric]="{
-          currencySymbol: '$',
-          decimalPlaces: 2
-        }"
+        [skyAutonumeric]="{ isoCurrencyCode: 'USD' }"
       />
     </form>
     <div>

@@ -16,7 +16,8 @@ import {
 } from 'rxjs';
 
 import {
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 
 import {
@@ -37,8 +38,8 @@ import {
 } from './autonumeric-options';
 
 import {
-  SkyAutonumericOptionsProvider
-} from './autonumeric-options-provider';
+  SkyAutonumericConfigService
+} from './autonumeric-config.service';
 
 // tslint:disable:no-forward-ref no-use-before-declare
 const SKY_AUTONUMERIC_VALUE_ACCESSOR = {
@@ -54,11 +55,11 @@ const SKY_AUTONUMERIC_VALIDATOR = {
 };
 // tslint:enable
 
-  /**
-   * Wraps the [`autoNumeric` utility](https://github.com/autoNumeric/autoNumeric) to format
-   * any type of number, including currency.
-   */
-  @Directive({
+/**
+ * Wraps the [`autoNumeric` utility](https://github.com/autoNumeric/autoNumeric) to format
+ * any type of number, including currency.
+ */
+@Directive({
   selector: 'input[skyAutonumeric]',
   providers: [
     SKY_AUTONUMERIC_VALUE_ACCESSOR,
@@ -72,8 +73,9 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
    */
   @Input()
   public set skyAutonumeric(value: SkyAutonumericOptions) {
-    this.autonumericOptions = this.mergeOptions(value);
-    this.updateAutonumericInstance();
+    this.autonumericConfigService.getAutonumericOptions(value).pipe(
+      tap(options => this.autonumericOptions = options)
+    ).subscribe(() => this.updateAutonumericInstance());
   }
 
   private autonumericInstance: AutoNumeric;
@@ -86,9 +88,9 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
 
   constructor(
     private elementRef: ElementRef,
-    private globalConfig: SkyAutonumericOptionsProvider,
     private renderer: Renderer2,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private autonumericConfigService: SkyAutonumericConfigService
   ) {
     this.createAutonumericInstance();
   }
@@ -129,7 +131,6 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
   }
 
   public writeValue(value: number): void {
-
     if (this.value !== value) {
       this.value = value;
       this.onChange(value);
@@ -213,24 +214,6 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
 
   private updateAutonumericInstance(): void {
     this.autonumericInstance.update(this.autonumericOptions as AutoNumericOptions);
-  }
-
-  private mergeOptions(value: SkyAutonumericOptions): SkyAutonumericOptions {
-    const globalOptions = this.globalConfig.getConfig();
-
-    let newOptions: SkyAutonumericOptions = {};
-    if (typeof value === 'string') {
-      const predefinedOptions = AutoNumeric.getPredefinedOptions();
-      newOptions = predefinedOptions[value as keyof AutoNumericOptions] as AutoNumericOptions;
-    } else {
-      newOptions = value;
-    }
-
-    return Object.assign(
-      {},
-      globalOptions,
-      newOptions
-    );
   }
 
   /* istanbul ignore next */
