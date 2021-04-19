@@ -84,9 +84,10 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
    */
   @Input()
   public set isoCurrencyCodeAndLocale(value: { isoCurrencyCode: string, locale?: string }) {
-    this.autonumericConfigService.getAutonumericOptionsForCurrencyAndLocaleMode(value.isoCurrencyCode, value.locale).pipe(
-      tap(options => this.autonumericOptions = options)
-    ).subscribe(() => this.updateAutonumericInstance());
+    this.autonumericConfigService
+      .getAutonumericOptionsForCurrencyAndLocaleMode(value.isoCurrencyCode, value.locale)
+      .pipe(tap(options => this.autonumericOptions = options))
+      .subscribe(() => this.updateAutonumericInstance());
   }
 
   private autonumericInstance: AutoNumeric;
