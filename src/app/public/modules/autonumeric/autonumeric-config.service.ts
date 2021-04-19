@@ -54,7 +54,7 @@ export class SkyAutonumericConfigService {
    * Merges custom AutoNumeric options with the globally defined AutoNumeric options.
    * @param options
    */
-  public getAutonumericOptions(value: SkyAutonumericOptions): Observable<SkyAutonumericOptions> {
+  public getAutonumericOptions(value?: SkyAutonumericOptions): Observable<SkyAutonumericOptions> {
     const options$ = this.parseOptions(value);
 
     return options$.pipe(
@@ -62,7 +62,9 @@ export class SkyAutonumericConfigService {
     );
   }
 
-  private parseOptions(options: SkyAutonumericOptions): Observable<AutonumericOptions> {
+  private parseOptions(options?: SkyAutonumericOptions): Observable<AutonumericOptions> {
+    options = options ?? {};
+
     if (isPredefinedAutoNumericOption(options)) {
       const predefinedOptions = AutoNumeric.getPredefinedOptions();
       return of(predefinedOptions[options as keyof AutonumericOptions] as AutonumericOptions);
