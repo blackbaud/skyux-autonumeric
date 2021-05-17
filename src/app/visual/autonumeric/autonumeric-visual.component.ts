@@ -7,7 +7,6 @@ import {
 
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators
 } from '@angular/forms';
@@ -29,6 +28,10 @@ import {
   AutonumericVisualOptionsProvider
 } from './autonumeric-visual-options-provider';
 
+import {
+  SkyAutonumericDefaults
+} from '../../public/modules/autonumeric/autonumeric-defaults';
+
 @Component({
   selector: 'autonumeric-visual',
   templateUrl: './autonumeric-visual.component.html',
@@ -43,13 +46,14 @@ import {
 export class AutonumericVisualComponent implements OnInit, OnDestroy {
 
   public autonumericOptions: SkyAutonumericOptions;
-
   public disabled: boolean = false;
 
   public formGroup: FormGroup;
+  public templateDrivenModel: any;
 
-  public templateDrivenModel: any = {
-    donationAmount: 1000
+  public currencyForm: FormGroup;
+  public currencyDefault: SkyAutonumericDefaults = {
+    currency: { isoCurrencyCode: 'USD', locale: 'en-US' }
   };
 
   private ngUnsubscribe = new Subject<void>();
@@ -60,8 +64,14 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
-      currency: new FormControl(undefined, [Validators.required]),
-      donationAmount: new FormControl(1000, [Validators.required])
+      donationAmount: [1000, Validators.required]
+    });
+    this.templateDrivenModel = {
+      donationAmount: 1000
+    };
+
+    this.currencyForm = this.formBuilder.group({
+      currency: [125.34, Validators.required]
     });
 
     this.formGroup.get('donationAmount').valueChanges
@@ -79,10 +89,7 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
   }
 
   public setValue(): void {
-    this.formGroup.setValue({
-      donationAmount: 3756.8,
-      currency: 18.99
-    });
+    this.formGroup.setValue({ donationAmount: 3756.8 });
     this.templateDrivenModel.donationAmount = 3756.8;
   }
 
@@ -116,5 +123,23 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
     } else {
       this.formGroup.get('donationAmount').enable();
     }
+  }
+
+  public setCurrencyLocale(locale: string): void {
+    const currency = {
+      ...this.currencyDefault,
+      locale: locale
+    };
+
+    this.currencyDefault = { currency };
+  }
+
+  public setCurrency(currencyCode: string): void {
+    const currency = {
+      ...this.currencyDefault,
+      isoCurrencyCode: currencyCode
+    };
+
+    this.currencyDefault = { currency };
   }
 }
