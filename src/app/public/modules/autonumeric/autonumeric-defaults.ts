@@ -5,17 +5,17 @@ export interface SkyAutonumericDefaults {
   /**
    * Applies a "Currency" configuration given a iso currency code and locale.
    */
-  currency: {
+  currency?: {
     /**
      * The ISO 4217 currency code.
+     * @example 'USD', 'CAD', 'EUR', 'JPY', 'GBP, 'AUD'
      */
-    isoCurrencyCode: string;
+    isoCurrencyCode?: string;
 
     /**
      * The locale.
-     * @default 'en-US'
      * @example 'en-US', 'en-GB', 'fr-FR'
      */
-    locale: string;
+    locale?: string;
   };
 }
