@@ -12,4 +12,11 @@ import AutoNumeric, {
  */
 export type SkyAutonumericOptions = PredefinedAutonumericOption | AutonumericOptions;
 
+/**
+ * [Predefined Language Option](https://github.com/autoNumeric/autoNumeric#predefined-language-options):
+ * 'French', 'Spanish', 'NorthAmerican', ...
+ *
+ * [Predefined Common Options](https://github.com/autoNumeric/autoNumeric#predefined-common-options):
+ * 'integer', 'float', 'euro', 'dollar', ect
+ */
 type PredefinedAutonumericOption = string | keyof AutoNumeric.PredefinedOptions;
