@@ -12,10 +12,6 @@ import {
 } from '@angular/forms';
 
 import {
-  SkyI18nModule
-} from '@skyux/i18n';
-
-import {
   SkyAutonumericDirective
 } from './autonumeric.directive';
 
@@ -30,8 +26,7 @@ import {
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
-    SkyI18nModule
+    ReactiveFormsModule
   ],
   exports: [
     SkyAutonumericDirective
