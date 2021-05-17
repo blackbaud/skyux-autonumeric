@@ -7,22 +7,8 @@ import AutoNumeric, {
 } from 'autonumeric';
 
 import {
-  Observable,
-  of,
-  iif,
-  defer
-} from 'rxjs';
-
-import {
-  map,
-  take
-} from 'rxjs/operators';
-
-import {
   SkyI18nCurrencyFormat,
-  SkyI18nCurrencyFormatService,
-  SkyAppLocaleProvider
-} from '@skyux/i18n';
+  SkyI18nCurrencyFormatService} from '@skyux/i18n';
 
 import {
   SkyAutonumericOptions
@@ -47,8 +33,7 @@ export class SkyAutonumericConfigService {
 
   constructor(
     private globalConfig: SkyAutonumericOptionsProvider,
-    private currencyFormatService: SkyI18nCurrencyFormatService,
-    private localeProvider: SkyAppLocaleProvider
+    private currencyFormatService: SkyI18nCurrencyFormatService
   ) { }
 
   /**
@@ -66,25 +51,11 @@ export class SkyAutonumericConfigService {
    * @param isoCurrencyCode the ISO 4217 Currency Code.
    * @param locale the locale. Defaults to 'en-US'.
    */
-  public getAutonumericOptionsForCurrencyAndLocaleMode(isoCurrencyCode?: string, locale?: string): Observable<AutonumericOptions> {
-    const skyLocale$: Observable<string> = this.localeProvider.getLocaleInfo().pipe(
-      take(1),
-      map(localeResp => localeResp.locale)
-    );
+  public getAutonumericOptionsForCurrencyAndLocaleMode(isoCurrencyCode: string = 'USD', locale: string = 'en-US'): AutonumericOptions {
+    const format = this.currencyFormatService.getCurrencyFormat(isoCurrencyCode, locale);
+    const options = this.mapFromCurrencyFormatToAutoNumericOptions(format);
 
-    const locale$: Observable<string> = iif(
-      () => locale === undefined,
-      defer(() => skyLocale$),
-      of(locale)
-    );
-
-    return locale$.pipe(
-      map(newLocale => {
-        const format = this.currencyFormatService.getCurrencyFormat(isoCurrencyCode, newLocale);
-        return this.mapFromCurrencyFormatToAutoNumericOptions(format);
-      }),
-      map(options => this.mergeWithGlobalConfig(options))
-    );
+    return this.mergeWithGlobalConfig(options);
   }
 
   private parseOptions(options: SkyAutonumericOptions = {}): AutonumericOptions {
