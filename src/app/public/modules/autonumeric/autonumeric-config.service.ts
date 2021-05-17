@@ -7,8 +7,8 @@ import AutoNumeric, {
 } from 'autonumeric';
 
 import {
-  SkyI18nCurrencyFormat,
-  SkyI18nCurrencyFormatService} from '@skyux/i18n';
+  SkyI18nCurrencyFormatService
+} from '@skyux/i18n';
 
 import {
   SkyAutonumericOptions
@@ -21,6 +21,10 @@ import {
 import {
   isPredefinedAutoNumericOption
 } from './option-guards';
+
+import {
+  SkyAutonumericDefaults
+} from './autonumeric-defaults';
 
 /**
  * Helper service to create autonumeric options.
@@ -47,15 +51,15 @@ export class SkyAutonumericConfigService {
   }
 
   /**
-   * Creates an Autonumeric Config from a Locale and Currency Code and merging the globally defined AutoNumeric options.
-   * @param isoCurrencyCode the ISO 4217 Currency Code.
-   * @param locale the locale. Defaults to 'en-US'.
+   * Given a Sky Autonumeric Default it will return default options
+   * @param defaults
    */
-  public getAutonumericOptionsForCurrencyAndLocaleMode(isoCurrencyCode: string = 'USD', locale: string = 'en-US'): AutonumericOptions {
-    const format = this.currencyFormatService.getCurrencyFormat(isoCurrencyCode, locale);
-    const options = this.mapFromCurrencyFormatToAutoNumericOptions(format);
+  public getSkyAutonumericDefaults(defaults: SkyAutonumericDefaults): AutonumericOptions {
+    if (defaults.currency) {
+      return this.getCurrencyConfig(defaults.currency);
+    }
 
-    return this.mergeWithGlobalConfig(options);
+    return {};
   }
 
   private parseOptions(options: SkyAutonumericOptions = {}): AutonumericOptions {
@@ -69,7 +73,15 @@ export class SkyAutonumericConfigService {
     return options;
   }
 
-  private mapFromCurrencyFormatToAutoNumericOptions(format: SkyI18nCurrencyFormat): AutonumericOptions {
+  /**
+   * Creates an Autonumeric Config from a Locale and Currency Code.
+   * @param isoCurrencyCode the ISO 4217 Currency Code.
+   * @param locale the locale. Defaults to 'en-US'.
+   */
+  private getCurrencyConfig(currency: { isoCurrencyCode?: string, locale?: string }): AutonumericOptions {
+    const { isoCurrencyCode = 'USD', locale = 'en-US' } = currency;
+
+    const format = this.currencyFormatService.getCurrencyFormat(isoCurrencyCode, locale);
     const options: AutonumericOptions = {
       currencySymbol: format.symbol,
       currencySymbolPlacement: format.symbolLocation === 'suffix' ? 's' : 'p',

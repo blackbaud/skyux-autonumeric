@@ -19,10 +19,6 @@ import {
 } from './modules/autonumeric/autonumeric.module';
 
 import {
-  SkyAutonumericOptions
-} from './modules/autonumeric/autonumeric-options';
-
-import {
   SkyAutonumericOptionsProvider
 } from './modules/autonumeric/autonumeric-options-provider';
 
@@ -64,18 +60,26 @@ describe('SkyAutonumericConfigService', () => {
     });
   });
 
-  describe('createOptionsForCurrencyAndLocaleMode', () => {
-    it('should handle custom "Currency and Locale" options when code and locale are passed', async () => {
-      const option = await service.getAutonumericOptionsForCurrencyAndLocaleMode('USD', 'en-CA').toPromise();
-      expect(option).toBeDefined();
-    });
-    it('should handle custom "Currency and Locale" options when only code is passed', async () => {
-      const option = await service.getAutonumericOptionsForCurrencyAndLocaleMode('CAD').toPromise();
-      expect(option).toBeDefined();
-    });
-    it('should handle custom "Currency and Locale" options whe nothing is passed', async () => {
-      const option = await service.getAutonumericOptionsForCurrencyAndLocaleMode().toPromise();
-      expect(option).toBeDefined();
+  describe('getSkyAutonumericDefaults', () => {
+    describe('currency', () => {
+      it('should handle when code and locale are passed', () => {
+        const option = service.getSkyAutonumericDefaults({
+          currency: { isoCurrencyCode: 'USD', locale: 'en-CA' }
+        });
+        expect(option).toBeDefined();
+      });
+      it('should handle when only code is passed', () => {
+        const option = service.getSkyAutonumericDefaults({
+          currency: { isoCurrencyCode: 'CAD' }
+        });
+        expect(option).toBeDefined();
+      });
+      it('should handle when nothing is passed', () => {
+        const option = service.getSkyAutonumericDefaults({
+          currency: { }
+        });
+        expect(option).toBeDefined();
+      });
     });
   });
 
