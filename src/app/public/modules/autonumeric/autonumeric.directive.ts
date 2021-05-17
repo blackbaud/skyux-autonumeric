@@ -7,7 +7,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Renderer2
+  Renderer2,
+  OnChanges
 } from '@angular/core';
 
 import {
@@ -16,8 +17,7 @@ import {
 } from 'rxjs';
 
 import {
-  takeUntil,
-  tap
+  takeUntil
 } from 'rxjs/operators';
 
 import {
@@ -40,6 +40,10 @@ import {
 import {
   SkyAutonumericConfigService
 } from './autonumeric-config.service';
+
+import {
+  SkyAutonumericDefaults
+} from './autonumeric-defaults';
 
 // tslint:disable:no-forward-ref no-use-before-declare
 const SKY_AUTONUMERIC_VALUE_ACCESSOR = {
@@ -66,29 +70,20 @@ const SKY_AUTONUMERIC_VALIDATOR = {
     SKY_AUTONUMERIC_VALIDATOR
   ]
 })
-export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueAccessor, Validator {
+export class SkyAutonumericDirective implements OnInit, OnDestroy, OnChanges, ControlValueAccessor, Validator {
 
   /**
    * Assigns the name of a property from `SkyAutonumericOptionsProvider`.
-   * Exclusive to the IsoCurrencyCodeAndLocale Input.
    */
   @Input()
-  public set skyAutonumeric(value: SkyAutonumericOptions) {
-    this.autonumericOptions = this.autonumericConfigService.getAutonumericOptions(value);
-    this.updateAutonumericInstance();
-  }
+  public skyAutonumeric: SkyAutonumericOptions;
 
   /**
-   * Formats a Currency based off a given ISO Currency Code and Locale.
-   * Exclusive to the skyAutonumeric Input.
+   * Defined defaults for certain input modes such as currency.
+   * These defaults take precedence over other options.
    */
   @Input()
-  public set isoCurrencyCodeAndLocale(value: { isoCurrencyCode: string, locale?: string }) {
-    this.autonumericConfigService
-      .getAutonumericOptionsForCurrencyAndLocaleMode(value.isoCurrencyCode, value.locale)
-      .pipe(tap(options => this.autonumericOptions = options))
-      .subscribe(() => this.updateAutonumericInstance());
-  }
+  public skyAutonumericDefaults: SkyAutonumericDefaults = {};
 
   private autonumericInstance: AutoNumeric;
   private autonumericOptions: AutoNumericOptions;
@@ -133,6 +128,14 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
   public ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  public ngOnChanges(): void {
+    const options = this.autonumericConfigService.getAutonumericOptions(this.skyAutonumeric);
+    const defaultOptions = this.autonumericConfigService.getSkyAutonumericDefaults(this.skyAutonumericDefaults);
+
+    this.autonumericOptions = { ...options, ...defaultOptions };
+    this.updateAutonumericInstance();
   }
 
   /**
