@@ -22,7 +22,8 @@
   "peerDependencies": {
     "@angular/common": "^9.1.6",
     "@angular/core": "^9.1.6",
-    "@angular/forms": "^9.1.6"
+    "@angular/forms": "^9.1.6",
+    "@skyux/i18n": "^4.1.0"
   },
   "dependencies": {
     "autonumeric": "4.6.0"
@@ -53,7 +54,7 @@
     "@skyux/docs-tools": "4.8.1",
     "@skyux/forms": "4.16.0",
     "@skyux/http": "4.1.0",
-    "@skyux/i18n": "4.0.3",
+    "@skyux/i18n": "4.1.0",
     "@skyux/indicators": "4.9.1",
     "@skyux/inline-form": "4.1.1",
     "@skyux/layout": "4.5.1",

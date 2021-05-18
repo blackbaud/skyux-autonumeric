@@ -1,5 +1,5 @@
 import AutoNumeric, {
-  Options
+  Options as AutonumericOptions
 } from 'autonumeric';
 
 /**
@@ -10,4 +10,13 @@ import AutoNumeric, {
  * [custom set of options](https://github.com/autoNumeric/autoNumeric#options)
  * that override any default options that the `skyAutonumeric` attribute specifies.
  */
-export type SkyAutonumericOptions = string | keyof AutoNumeric.PredefinedOptions | Options;
+export type SkyAutonumericOptions = PredefinedAutonumericOption | AutonumericOptions;
+
+/**
+ * [Predefined Language Option](https://github.com/autoNumeric/autoNumeric#predefined-language-options):
+ * 'French', 'Spanish', 'NorthAmerican', ...
+ *
+ * [Predefined Common Options](https://github.com/autoNumeric/autoNumeric#predefined-common-options):
+ * 'integer', 'float', 'euro', 'dollar', ect
+ */
+type PredefinedAutonumericOption = string | keyof AutoNumeric.PredefinedOptions;

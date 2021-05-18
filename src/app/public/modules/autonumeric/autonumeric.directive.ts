@@ -7,7 +7,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Renderer2
+  Renderer2,
+  OnChanges
 } from '@angular/core';
 
 import {
@@ -37,8 +38,12 @@ import {
 } from './autonumeric-options';
 
 import {
-  SkyAutonumericOptionsProvider
-} from './autonumeric-options-provider';
+  SkyAutonumericConfigService
+} from './autonumeric-config.service';
+
+import {
+  SkyAutonumericDefaults
+} from './autonumeric-defaults';
 
 // tslint:disable:no-forward-ref no-use-before-declare
 const SKY_AUTONUMERIC_VALUE_ACCESSOR = {
@@ -54,30 +59,34 @@ const SKY_AUTONUMERIC_VALIDATOR = {
 };
 // tslint:enable
 
-  /**
-   * Wraps the [`autoNumeric` utility](https://github.com/autoNumeric/autoNumeric) to format
-   * any type of number, including currency.
-   */
-  @Directive({
+/**
+ * Wraps the [`autoNumeric` utility](https://github.com/autoNumeric/autoNumeric) to format
+ * any type of number, including currency.
+ */
+@Directive({
   selector: 'input[skyAutonumeric]',
   providers: [
     SKY_AUTONUMERIC_VALUE_ACCESSOR,
     SKY_AUTONUMERIC_VALIDATOR
   ]
 })
-export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueAccessor, Validator {
+export class SkyAutonumericDirective implements OnInit, OnDestroy, OnChanges, ControlValueAccessor, Validator {
 
   /**
    * Assigns the name of a property from `SkyAutonumericOptionsProvider`.
    */
   @Input()
-  public set skyAutonumeric(value: SkyAutonumericOptions) {
-    this.autonumericOptions = this.mergeOptions(value);
-    this.updateAutonumericInstance();
-  }
+  public skyAutonumeric: SkyAutonumericOptions;
+
+  /**
+   * Defined defaults for certain input modes such as currency.
+   * These defaults take precedence over other options.
+   */
+  @Input()
+  public skyAutonumericDefaults: SkyAutonumericDefaults = {};
 
   private autonumericInstance: AutoNumeric;
-  private autonumericOptions: SkyAutonumericOptions;
+  private autonumericOptions: AutoNumericOptions;
   private control: AbstractControl;
   private isFirstChange = true;
   private value: number;
@@ -86,9 +95,9 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
 
   constructor(
     private elementRef: ElementRef,
-    private globalConfig: SkyAutonumericOptionsProvider,
     private renderer: Renderer2,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private autonumericConfigService: SkyAutonumericConfigService
   ) {
     this.createAutonumericInstance();
   }
@@ -121,6 +130,14 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
     this.ngUnsubscribe.complete();
   }
 
+  public ngOnChanges(): void {
+    const options = this.autonumericConfigService.getAutonumericOptions(this.skyAutonumeric);
+    const defaultOptions = this.autonumericConfigService.getSkyAutonumericDefaults(this.skyAutonumericDefaults);
+
+    this.autonumericOptions = { ...options, ...defaultOptions };
+    this.updateAutonumericInstance();
+  }
+
   /**
    * Implemented as part of ControlValueAccessor.
    */
@@ -129,7 +146,6 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
   }
 
   public writeValue(value: number): void {
-
     if (this.value !== value) {
       this.value = value;
       this.onChange(value);
@@ -213,24 +229,6 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
 
   private updateAutonumericInstance(): void {
     this.autonumericInstance.update(this.autonumericOptions as AutoNumericOptions);
-  }
-
-  private mergeOptions(value: SkyAutonumericOptions): SkyAutonumericOptions {
-    const globalOptions = this.globalConfig.getConfig();
-
-    let newOptions: SkyAutonumericOptions = {};
-    if (typeof value === 'string') {
-      const predefinedOptions = AutoNumeric.getPredefinedOptions();
-      newOptions = predefinedOptions[value as keyof AutoNumericOptions] as AutoNumericOptions;
-    } else {
-      newOptions = value;
-    }
-
-    return Object.assign(
-      {},
-      globalOptions,
-      newOptions
-    );
   }
 
   /* istanbul ignore next */

@@ -1,159 +1,140 @@
-<div style="padding:30px;">
-  <h2>
-    Reactive form
-  </h2>
+<div class="sky-padding-even-large">
 
-  <form
-    [formGroup]="formGroup"
-    novalidate
-  >
-    <input
-      class="sky-form-control"
-      formControlName="donationAmount"
-      type="text"
-      [skyAutonumeric]="autonumericOptions"
-    />
-  </form>
-
+  <!-- Value and State -->
   <div>
-    Value: {{formGroup.controls.donationAmount.value}}
-  </div>
-  <div>
-    Dirty: {{formGroup.controls.donationAmount.dirty}}
-  </div>
-  <div>
-    Pristine: {{formGroup.controls.donationAmount.pristine}}
-  </div>
-  <div>
-    Touched: {{formGroup.controls.donationAmount.touched}}
-  </div>
-  <div>
-    Valid: {{formGroup.controls.donationAmount.valid}}
-  </div>
-
-  <h2>
-    Template-driven form
-  </h2>
-
-  <form
-    #templateDrivenForm="ngForm"
-  >
-    <input
-      class="sky-form-control"
-      name="donationAmount"
-      required
-      type="text"
-      [disabled]="disabled"
-      [skyAutonumeric]="autonumericOptions"
-      [(ngModel)]="templateDrivenModel.donationAmount"
-      #donationAmount="ngModel"
-    />
-  </form>
-
-  <div>
-    Value: {{ donationAmount.value }}
-  </div>
-  <div>
-    Dirty: {{ donationAmount.dirty }}
-  </div>
-  <div>
-    Pristine: {{ donationAmount.pristine }}
-  </div>
-  <div>
-    Touched: {{ donationAmount.touched }}
-  </div>
-  <div>
-    Valid: {{ donationAmount.valid }}
-  </div>
-
-  <!--
-    Currency Example - https://github.com/blackbaud/skyux-autonumeric/issues/17
-  -->
-  <div>
-    <h2>
-      Currency example
-    </h2>
-    <form
-      [formGroup]="formGroup"
-    >
-      <input
-        class="sky-form-control"
-        formControlName="currency"
-        type="text"
-        [skyAutonumeric]="{
-          currencySymbol: '$',
-          decimalPlaces: 2
-        }"
-      />
-    </form>
+    <h2>Value and State</h2>
     <div>
-      Value: {{formGroup.controls.currency.value}}
+      <h3>Reactive form</h3>
+      <form
+        [formGroup]="formGroup"
+        novalidate
+        class="sky-margin-stacked-compact"
+      >
+        <input
+          class="sky-form-control"
+          formControlName="donationAmount"
+          type="text"
+          [skyAutonumeric]="autonumericOptions"
+        />
+      </form>
+      <debug-form-control-state [control]="formGroup.controls.donationAmount"></debug-form-control-state>
     </div>
+
     <div>
-      Dirty: {{formGroup.controls.currency.dirty}}
+      <h3>Template-driven form</h3>
+      <form
+        #templateDrivenForm="ngForm"
+        class="sky-margin-stacked-compact"
+      >
+        <input
+          class="sky-form-control"
+          name="donationAmount"
+          required
+          type="text"
+          [disabled]="disabled"
+          [skyAutonumeric]="autonumericOptions"
+          [(ngModel)]="templateDrivenModel.donationAmount"
+          #donationAmount="ngModel"
+        />
+      </form>
+      <debug-form-control-state [control]="donationAmount"></debug-form-control-state>
     </div>
+
     <div>
-      Pristine: {{formGroup.controls.currency.pristine}}
-    </div>
-    <div>
-      Touched: {{formGroup.controls.currency.touched}}
-    </div>
-    <div>
-      Valid: {{formGroup.controls.currency.valid}}
+      <h3>Modify value and state</h3>
+      <button
+        class="sky-btn sky-margin-inline-compact"
+        type="button"
+        (click)="setValue()"
+      >
+        Set value
+      </button>
+
+      <button
+        class="sky-btn sky-margin-inline-compact"
+        type="button"
+        (click)="clearValue()"
+      >
+        Clear value
+      </button>
+
+      <button
+        class="sky-btn sky-margin-inline-compact"
+        type="button"
+        (click)="setOptions()"
+      >
+        Set options
+      </button>
+
+      <button
+        class="sky-btn sky-margin-inline-compact"
+        type="button"
+        (click)="setOptionsByPreset()"
+      >
+        Set options by preset
+      </button>
+
+      <button
+        class="sky-btn sky-margin-inline-compact"
+        type="button"
+        (click)="setOptionsToCustom()"
+      >
+        Set options to custom
+      </button>
+
+      <button
+        class="sky-btn sky-margin-inline-compact"
+        type="button"
+        (click)="onDisableClick()"
+      >
+        Toggle disabled
+      </button>
+
+      <pre>{{ autonumericOptions | json }}</pre>
     </div>
   </div>
 
-  <h2>
-    Modify value and state
-  </h2>
+  <hr />
 
-  <button
-    class="sky-btn"
-    type="button"
-    (click)="setValue()"
-  >
-    Set value
-  </button>
+  <!-- Sky Autonumeric Defaults -->
+  <div>
+    <h2>SkyAutonumericDefaults</h2>
 
-  <button
-    class="sky-btn"
-    type="button"
-    (click)="clearValue()"
-  >
-    Clear value
-  </button>
+    <div>
+      <h3>Currency</h3>
+      <form
+        [formGroup]="currencyForm"
+        class="sky-margin-stacked-compact"
+      >
+        <input
+          class="sky-form-control"
+          formControlName="currency"
+          type="text"
+          [skyAutonumeric]="{}"
+          [skyAutonumericDefaults]="currencyDefault"
+        />
+      </form>
+    </div>
 
-  <button
-    class="sky-btn"
-    type="button"
-    (click)="setOptions()"
-  >
-    Set options
-  </button>
+    <div class="sky-margin-stacked-compact">
+      <select class="sky-margin-inline-compact" #selectedLocale (change)="setCurrencyLocale(selectedLocale.value)">
+        <option>en-US</option>
+        <option>en-CA</option>
+        <option>en-GB</option>
+        <option>en-ES</option>
+        <option>es-MX</option>
+        <option>fr-FR</option>
+        <option>ja-JP</option>
+      </select>
+      <select #selectedCurrency (change)="setCurrency(selectedCurrency.value)">
+        <option>USD</option>
+        <option>CAD</option>
+        <option>EUR</option>
+        <option>JPY</option>
+        <option>GBP</option>
+        <option>AUD</option>
+      </select>
+    </div>
 
-  <button
-    class="sky-btn"
-    type="button"
-    (click)="setOptionsByPreset()"
-  >
-    Set options by preset
-  </button>
-
-  <button
-    class="sky-btn"
-    type="button"
-    (click)="setOptionsToCustom()"
-  >
-    Set options to custom
-  </button>
-
-  <button
-    class="sky-btn"
-    type="button"
-    (click)="onDisableClick()"
-  >
-    Toggle disabled
-  </button>
-
-  <pre>{{ autonumericOptions | json }}</pre>
+  </div>
 </div>
