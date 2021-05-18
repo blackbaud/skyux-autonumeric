@@ -12,15 +12,15 @@ import {
 
 import {
   SkyAutonumericConfigService
-} from './modules/autonumeric/autonumeric-config.service';
+} from './autonumeric-config.service';
 
 import {
   SkyAutonumericModule
-} from './modules/autonumeric/autonumeric.module';
+} from './autonumeric.module';
 
 import {
   SkyAutonumericOptionsProvider
-} from './modules/autonumeric/autonumeric-options-provider';
+} from './autonumeric-options-provider';
 
 describe('SkyAutonumericConfigService', () => {
   let service: SkyAutonumericConfigService;
