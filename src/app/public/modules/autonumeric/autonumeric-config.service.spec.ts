@@ -68,6 +68,12 @@ describe('SkyAutonumericConfigService', () => {
         });
         expect(option).toBeDefined();
       });
+      it('should handle when code and locale are passed', () => {
+        const option = service.getSkyAutonumericDefaults({
+          currency: { isoCurrencyCode: 'JPY', locale: 'es-ES' }
+        });
+        expect(option).toBeDefined();
+      });
       it('should handle when only code is passed', () => {
         const option = service.getSkyAutonumericDefaults({
           currency: { isoCurrencyCode: 'CAD' }
