@@ -1,6 +1,6 @@
 # 4.0.4 (2021-06-02)
 
-- Fiexed the `skyAutonumeric` directive to use the options provider when no local options are given to the directive. [#50](https://github.com/blackbaud/skyux-autonumeric/pull/50)
+- Fixed the `skyAutonumeric` directive to use the options provider when no local options are given to the directive. [#50](https://github.com/blackbaud/skyux-autonumeric/pull/50)
 
 # 4.0.3 (2021-04-01)
 
