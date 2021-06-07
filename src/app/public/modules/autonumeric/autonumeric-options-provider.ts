@@ -10,7 +10,9 @@ import {
  * Provides options to the underlying [autoNumeric utility](https://github.com/autoNumeric/autoNumeric).
  * This can set global options on multiple input fields.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SkyAutonumericOptionsProvider {
 
   /**
