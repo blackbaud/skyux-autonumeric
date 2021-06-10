@@ -15,10 +15,6 @@ import {
   SkyAutonumericDirective
 } from './autonumeric.directive';
 
-import {
-  SkyAutonumericOptionsProvider
-} from './autonumeric-options-provider';
-
 @NgModule({
   declarations: [
     SkyAutonumericDirective
@@ -30,9 +26,6 @@ import {
   ],
   exports: [
     SkyAutonumericDirective
-  ],
-  providers: [
-    SkyAutonumericOptionsProvider
   ]
 })
 export class SkyAutonumericModule { }
