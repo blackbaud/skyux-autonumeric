@@ -1,3 +1,9 @@
+# 5.0.0-beta.0 (2021-07-08)
+
+- Initial beta release.
+- Added support for `@angular/core@^12`. [#53](https://github.com/blackbaud/skyux-autonumeric/pull/53)
+- Fixed `SkyAutonumericOptionsProvider` to work within lazy-loaded feature modules. [#52](https://github.com/blackbaud/skyux-autonumeric/pull/52)
+
 # 4.0.4 (2021-06-02)
 
 - Fixed the `skyAutonumeric` directive to use the options provider when no local options are given to the directive. [#50](https://github.com/blackbaud/skyux-autonumeric/pull/50)
