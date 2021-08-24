@@ -201,6 +201,7 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
    * a form value when the only input was the programatically-added currency symbol.
    */
   private isInputValueTheCurrencySymbol(inputValue: string): boolean {
+    /* istanbul ignore next */
     const currencySymbol = ((this.autonumericOptions as AutoNumeric.Options)?.currencySymbol ?? '').trim();
     return (currencySymbol && inputValue === currencySymbol);
   }
