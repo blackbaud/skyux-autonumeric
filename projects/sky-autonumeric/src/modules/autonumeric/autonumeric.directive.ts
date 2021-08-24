@@ -36,7 +36,7 @@ import {
   SkyAutonumericOptionsProvider
 } from './autonumeric-options-provider';
 
-import * as AutoNumeric from 'AutoNumeric';
+import * as AutoNumeric from 'autonumeric';
 
 // tslint:disable:no-forward-ref no-use-before-declare
 const SKY_AUTONUMERIC_VALUE_ACCESSOR = {
