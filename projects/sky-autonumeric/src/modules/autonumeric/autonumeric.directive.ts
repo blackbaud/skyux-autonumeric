@@ -36,7 +36,7 @@ import {
   SkyAutonumericOptionsProvider
 } from './autonumeric-options-provider';
 
-import * as AutoNumeric from 'autonumeric';
+const AutoNumeric = require("autonumeric")
 
 // tslint:disable:no-forward-ref no-use-before-declare
 const SKY_AUTONUMERIC_VALUE_ACCESSOR = {
@@ -74,7 +74,7 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
     this.updateAutonumericInstance();
   }
 
-  private autonumericInstance: AutoNumeric;
+  private autonumericInstance: typeof AutoNumeric;
   private autonumericOptions: SkyAutonumericOptions;
   private control: AbstractControl;
   private isFirstChange = true;
@@ -202,7 +202,7 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
    */
   private isInputValueTheCurrencySymbol(inputValue: string): boolean {
     /* istanbul ignore next */
-    const currencySymbol = ((this.autonumericOptions as AutoNumeric.Options)?.currencySymbol ?? '').trim();
+    const currencySymbol = ((this.autonumericOptions as typeof AutoNumeric.Options)?.currencySymbol ?? '').trim();
     return (currencySymbol && inputValue === currencySymbol);
   }
 
@@ -215,7 +215,7 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
   }
 
   private updateAutonumericInstance(): void {
-    this.autonumericInstance.update(this.autonumericOptions as AutoNumeric.Options);
+    this.autonumericInstance.update(this.autonumericOptions as typeof AutoNumeric.Options);
   }
 
   private mergeOptions(value: SkyAutonumericOptions): SkyAutonumericOptions {
@@ -224,7 +224,7 @@ export class SkyAutonumericDirective implements OnInit, OnDestroy, ControlValueA
     let newOptions: SkyAutonumericOptions = {};
     if (typeof value === 'string') {
       const predefinedOptions = AutoNumeric.getPredefinedOptions();
-      newOptions = predefinedOptions[value as keyof AutoNumeric.Options] as AutoNumeric.Options;
+      newOptions = predefinedOptions[value as keyof typeof AutoNumeric.Options] as typeof AutoNumeric.Options;
     } else {
       newOptions = value;
     }
