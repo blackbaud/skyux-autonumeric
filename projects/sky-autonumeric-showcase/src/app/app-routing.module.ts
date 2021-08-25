@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AutonumericVisualComponent } from './visual/autonumeric/autonumeric-visual.component';
-import { VisualsComponent } from './visual/visuals.component';
+import { VisualComponent } from './visual/visual.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: VisualsComponent
+    component: VisualComponent
   },
   {
     path: 'visual/autonumeric',
