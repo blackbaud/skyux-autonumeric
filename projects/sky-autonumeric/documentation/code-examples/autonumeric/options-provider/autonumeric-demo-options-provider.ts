@@ -1,7 +1,10 @@
 import {
-  SkyAutonumericOptions,
+  SkyAutonumericOptions
+} from '../../../../src/modules/autonumeric/autonumeric-options';
+
+import {
   SkyAutonumericOptionsProvider
-} from '@skyux/autonumeric';
+} from '../../../../src/modules/autonumeric/autonumeric-options-provider';
 
 export class AutonumericDemoOptionsProvider extends SkyAutonumericOptionsProvider {
 

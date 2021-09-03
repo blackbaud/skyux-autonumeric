@@ -24,7 +24,6 @@
     "@angular/router": "~12.2.0",
     "@blackbaud/auth-client": "^2.48.0",
     "@skyux/assets": "^5.0.0-beta.0",
-    "@skyux/autonumeric": "^5.0.0-beta.0",
     "@skyux/core": "^5.0.0-beta.9",
     "@skyux/forms": "^5.0.0-beta.1",
     "@skyux/i18n": "^5.0.0-beta.4",

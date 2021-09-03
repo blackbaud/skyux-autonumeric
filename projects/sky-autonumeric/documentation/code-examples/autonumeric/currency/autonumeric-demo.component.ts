@@ -12,7 +12,7 @@ import {
 
 import {
   SkyAutonumericOptions
-} from '@skyux/autonumeric';
+} from '../../../../src/modules/autonumeric/autonumeric-options';
 
 @Component({
   selector: 'app-autonumeric-demo',
