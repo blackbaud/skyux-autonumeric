@@ -11,9 +11,12 @@ import {
 } from '@angular/forms';
 
 import {
-  SkyAutonumericOptions,
+  SkyAutonumericOptions
+} from 'projects/sky-autonumeric/src/public-api';
+
+import {
   SkyAutonumericOptionsProvider
-} from '@skyux/autonumeric';
+} from 'projects/sky-autonumeric/src/public-api';
 
 import {
   AutonumericDemoOptionsProvider

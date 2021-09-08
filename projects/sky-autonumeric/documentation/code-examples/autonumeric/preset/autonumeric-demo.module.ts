@@ -12,7 +12,7 @@ import {
 
 import {
   SkyAutonumericModule
-} from '@skyux/autonumeric';
+} from 'projects/sky-autonumeric/src/public-api';
 
 import {
   SkyIdModule
