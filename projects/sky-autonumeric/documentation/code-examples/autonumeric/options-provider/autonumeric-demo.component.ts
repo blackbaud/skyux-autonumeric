@@ -12,11 +12,11 @@ import {
 
 import {
   SkyAutonumericOptions
-} from '../../../../src/modules/autonumeric/autonumeric-options';
+} from 'projects/sky-autonumeric/src/public-api';
 
 import {
   SkyAutonumericOptionsProvider
-} from '../../../../src/modules/autonumeric/autonumeric-options-provider';
+} from 'projects/sky-autonumeric/src/public-api';
 
 import {
   AutonumericDemoOptionsProvider
