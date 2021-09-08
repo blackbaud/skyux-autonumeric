@@ -1,3 +1,7 @@
+# 5.0.0-beta.3 (2021-09-08)
+
+- Updated peer dependencies. [#58](https://github.com/blackbaud/skyux-autonumeric/pull/58)
+
 # 5.0.0-beta.2 (2021-09-03)
 
 - Enabled Ivy's `partial` compilation mode. [#56](https://github.com/blackbaud/skyux-autonumeric/pull/56)
