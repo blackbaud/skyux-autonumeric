@@ -29,7 +29,10 @@
           "options": {
             "main": "projects/sky-autonumeric/src/test.ts",
             "tsConfig": "projects/sky-autonumeric/tsconfig.spec.json",
-            "karmaConfig": "projects/sky-autonumeric/karma.conf.js"
+            "karmaConfig": "projects/sky-autonumeric/karma.conf.js",
+            "codeCoverageExclude": [
+              "projects/sky-autonumeric/src/test.ts"
+            ]
           }
         },
         "lint": {
