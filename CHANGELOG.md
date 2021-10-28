@@ -1,3 +1,7 @@
+# 4.0.5 (2021-10-28)
+
+- Added bug fixes and features from the `master` branch. [#63](https://github.com/blackbaud/skyux-autonumeric/pull/63)
+
 # 4.0.4 (2021-06-02)
 
 - Fixed the `skyAutonumeric` directive to use the options provider when no local options are given to the directive. [#50](https://github.com/blackbaud/skyux-autonumeric/pull/50)
