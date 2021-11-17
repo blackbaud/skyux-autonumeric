@@ -1,6 +1,6 @@
 import {
   SkyAutonumericOptions,
-  SkyAutonumericOptionsProvider
+  SkyAutonumericOptionsProvider,
 } from 'projects/sky-autonumeric/src/public-api';
 
 export class AutonumericVisualOptionsProvider extends SkyAutonumericOptionsProvider {
@@ -10,7 +10,7 @@ export class AutonumericVisualOptionsProvider extends SkyAutonumericOptionsProvi
 
   public getConfig(): SkyAutonumericOptions {
     return {
-      decimalPlaces: 5
+      decimalPlaces: 5,
     };
   }
 }

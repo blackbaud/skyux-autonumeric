@@ -2,32 +2,26 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
 } from '@angular/core';
 
 import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators
+  Validators,
 } from '@angular/forms';
 
-import {
-  Subject
-} from 'rxjs';
+import { Subject } from 'rxjs';
 
-import {
-  takeUntil
-} from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 import {
   SkyAutonumericOptions,
-  SkyAutonumericOptionsProvider
+  SkyAutonumericOptionsProvider,
 } from 'projects/sky-autonumeric/src/public-api';
 
-import {
-  AutonumericVisualOptionsProvider
-} from './autonumeric-visual-options-provider';
+import { AutonumericVisualOptionsProvider } from './autonumeric-visual-options-provider';
 
 @Component({
   selector: 'app-autonumeric-visual',
@@ -36,12 +30,11 @@ import {
   providers: [
     {
       provide: SkyAutonumericOptionsProvider,
-      useClass: AutonumericVisualOptionsProvider
-    }
-  ]
+      useClass: AutonumericVisualOptionsProvider,
+    },
+  ],
 })
 export class AutonumericVisualComponent implements OnInit, OnDestroy {
-
   public autonumericOptions: SkyAutonumericOptions;
 
   public disabled: boolean = false;
@@ -49,25 +42,22 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
   public formGroup: FormGroup;
 
   public templateDrivenModel: any = {
-    donationAmount: 1000
+    donationAmount: 1000,
   };
 
   private ngUnsubscribe = new Subject<void>();
 
-  constructor(
-    private formBuilder: FormBuilder
-  ) { }
+  constructor(private formBuilder: FormBuilder) {}
 
   public ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
       currency: new FormControl(undefined, [Validators.required]),
-      donationAmount: new FormControl(1000, [Validators.required])
+      donationAmount: new FormControl(1000, [Validators.required]),
     });
 
-    this.formGroup.get('donationAmount').valueChanges
-      .pipe(
-        takeUntil(this.ngUnsubscribe)
-      )
+    this.formGroup
+      .get('donationAmount')
+      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((value) => {
         console.log('Value changed:', value);
       });
@@ -81,7 +71,7 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
   public setValue(): void {
     this.formGroup.setValue({
       donationAmount: 3756.8,
-      currency: 18.99
+      currency: 18.99,
     });
     this.templateDrivenModel.donationAmount = 3756.8;
   }
@@ -93,7 +83,7 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
 
   public setOptions(): void {
     this.autonumericOptions = {
-      decimalPlaces: 9
+      decimalPlaces: 9,
     };
   }
 
@@ -105,7 +95,7 @@ export class AutonumericVisualComponent implements OnInit, OnDestroy {
     this.autonumericOptions = {
       currencySymbol: '#',
       currencySymbolPlacement: 's',
-      decimalPlaces: 3
+      decimalPlaces: 3,
     };
   }
 
