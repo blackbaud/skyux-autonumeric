@@ -7,16 +7,13 @@ import { AutonumericVisualComponent } from './autonumeric/autonumeric-visual.com
 import { VisualComponent } from './visual.component';
 
 @NgModule({
-  declarations: [
-    AutonumericVisualComponent,
-    VisualComponent
-  ],
+  declarations: [AutonumericVisualComponent, VisualComponent],
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    SkyAutonumericModule
-  ]
+    SkyAutonumericModule,
+  ],
 })
-export class VisualModule { }
+export class VisualModule {}

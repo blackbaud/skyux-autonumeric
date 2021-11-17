@@ -10,7 +10,7 @@
       "prefix": "sky",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "builder": "@skyux-sdk/angular-builders:ng-packagr",
           "options": {
             "project": "projects/sky-autonumeric/ng-package.json"
           },
@@ -30,9 +30,7 @@
             "main": "projects/sky-autonumeric/src/test.ts",
             "tsConfig": "projects/sky-autonumeric/tsconfig.spec.json",
             "karmaConfig": "projects/sky-autonumeric/karma.conf.js",
-            "codeCoverageExclude": [
-              "projects/sky-autonumeric/src/test.ts"
-            ]
+            "codeCoverageExclude": ["projects/sky-autonumeric/src/test.ts"]
           }
         },
         "lint": {
@@ -73,9 +71,7 @@
               "projects/sky-autonumeric-showcase/src/favicon.ico",
               "projects/sky-autonumeric-showcase/src/assets"
             ],
-            "styles": [
-              "projects/sky-autonumeric-showcase/src/styles.scss"
-            ],
+            "styles": ["projects/sky-autonumeric-showcase/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -141,9 +137,7 @@
               "projects/sky-autonumeric-showcase/src/favicon.ico",
               "projects/sky-autonumeric-showcase/src/assets"
             ],
-            "styles": [
-              "projects/sky-autonumeric-showcase/src/styles.scss"
-            ],
+            "styles": ["projects/sky-autonumeric-showcase/src/styles.scss"],
             "scripts": []
           }
         },
