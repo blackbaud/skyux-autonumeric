@@ -1,6 +1,6 @@
 # 5.0.2 (2021-11-17)
 
-- Added support for prettier code formatting and updated the builder to support StackBlitz. []()
+- Added support for prettier code formatting and updated the builder to support StackBlitz. [#65](https://github.com/blackbaud/skyux-autonumeric/pull/65)
 
 # 5.0.1 (2021-10-28)
 
