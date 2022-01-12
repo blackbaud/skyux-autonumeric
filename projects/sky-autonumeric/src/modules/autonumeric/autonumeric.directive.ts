@@ -63,11 +63,11 @@ export class SkyAutonumericDirective
     this.updateAutonumericInstance();
   }
 
-  private autonumericInstance: AutoNumeric;
-  private autonumericOptions: SkyAutonumericOptions;
-  private control: AbstractControl;
+  private autonumericInstance!: AutoNumeric;
+  private autonumericOptions!: SkyAutonumericOptions;
+  private control?: AbstractControl;
   private isFirstChange = true;
-  private value: number;
+  private value?: number;
 
   private ngUnsubscribe = new Subject<void>();
 
@@ -119,7 +119,7 @@ export class SkyAutonumericDirective
     this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', value);
   }
 
-  public writeValue(value: number): void {
+  public writeValue(value: number | undefined): void {
     if (this.value !== value) {
       this.value = value;
       this.onChange(value);
@@ -129,13 +129,11 @@ export class SkyAutonumericDirective
         this.isFirstChange && this.control && this.value !== null;
       if (initializedWithValue) {
         this.isFirstChange = false;
-        this.control.markAsPristine();
+        this.control?.markAsPristine();
       }
     }
 
-    const isNumber =
-      typeof value === 'number' && value !== null && value !== undefined;
-    if (isNumber) {
+    if (typeof value === 'number') {
       this.autonumericInstance.set(value);
     } else {
       this.autonumericInstance.clear();
@@ -162,7 +160,7 @@ export class SkyAutonumericDirective
     return noErrors;
   }
 
-  public registerOnChange(fn: (value: number) => void): void {
+  public registerOnChange(fn: (value?: number) => void): void {
     this.onChange = fn;
   }
 
@@ -182,7 +180,7 @@ export class SkyAutonumericDirective
         ? this.autonumericInstance.getNumber()
         : undefined;
 
-    return numericValue;
+    return numericValue === null ? undefined : numericValue;
   }
 
   /**
@@ -196,7 +194,7 @@ export class SkyAutonumericDirective
     const currencySymbol = (
       (this.autonumericOptions as AutoNumeric.Options)?.currencySymbol ?? ''
     ).trim();
-    return currencySymbol && inputValue === currencySymbol;
+    return !!currencySymbol && inputValue === currencySymbol;
   }
 
   private getInputValue(): string {
@@ -216,7 +214,7 @@ export class SkyAutonumericDirective
   private mergeOptions(value: SkyAutonumericOptions): SkyAutonumericOptions {
     const globalOptions = this.globalConfig.getConfig();
 
-    let newOptions: SkyAutonumericOptions = {};
+    let newOptions: SkyAutonumericOptions;
     if (typeof value === 'string') {
       const predefinedOptions = AutoNumeric.getPredefinedOptions();
       newOptions = predefinedOptions[
@@ -230,7 +228,7 @@ export class SkyAutonumericDirective
   }
 
   /* istanbul ignore next */
-  private onChange = (_: number) => {};
+  private onChange = (_?: number) => {};
   /* istanbul ignore next */
   private onTouched = () => {};
 }
