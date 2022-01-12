@@ -129,7 +129,7 @@ export class SkyAutonumericDirective
         this.isFirstChange && this.control && this.value !== null;
       if (initializedWithValue) {
         this.isFirstChange = false;
-        this.control?.markAsPristine();
+        this.control!.markAsPristine();
       }
     }
 
