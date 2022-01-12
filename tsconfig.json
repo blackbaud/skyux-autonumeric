@@ -20,7 +20,10 @@
     "target": "es2017",
     "module": "es2020",
     "lib": ["es2018", "dom"],
-    "strict": true
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
