@@ -10,10 +10,6 @@ import {
   Renderer2,
 } from '@angular/core';
 
-import { fromEvent, Subject } from 'rxjs';
-
-import { takeUntil } from 'rxjs/operators';
-
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -23,11 +19,15 @@ import {
   Validator,
 } from '@angular/forms';
 
+import AutoNumeric from 'autonumeric';
+
+import { fromEvent, Subject } from 'rxjs';
+
+import { takeUntil } from 'rxjs/operators';
+
 import { SkyAutonumericOptions } from './autonumeric-options';
 
 import { SkyAutonumericOptionsProvider } from './autonumeric-options-provider';
-
-import AutoNumeric from 'autonumeric';
 
 // tslint:disable:no-forward-ref no-use-before-declare
 const SKY_AUTONUMERIC_VALUE_ACCESSOR = {
@@ -63,7 +63,7 @@ export class SkyAutonumericDirective
     this.updateAutonumericInstance();
   }
 
-  private autonumericInstance!: AutoNumeric;
+  private autonumericInstance: AutoNumeric;
   private autonumericOptions!: SkyAutonumericOptions;
   private control?: AbstractControl;
   private isFirstChange = true;
@@ -77,7 +77,7 @@ export class SkyAutonumericDirective
     private renderer: Renderer2,
     private changeDetector: ChangeDetectorRef
   ) {
-    this.createAutonumericInstance();
+    this.autonumericInstance = new AutoNumeric(this.elementRef.nativeElement);
   }
 
   public ngOnInit(): void {
@@ -160,7 +160,7 @@ export class SkyAutonumericDirective
     return noErrors;
   }
 
-  public registerOnChange(fn: (value?: number) => void): void {
+  public registerOnChange(fn: (value: number | undefined) => void): void {
     this.onChange = fn;
   }
 
@@ -175,12 +175,9 @@ export class SkyAutonumericDirective
 
   private getNumericValue(): number | undefined {
     const inputValue = this.getInputValue();
-    const numericValue =
-      inputValue && !this.isInputValueTheCurrencySymbol(inputValue)
-        ? <number>this.autonumericInstance.getNumber()
-        : undefined;
-
-    return numericValue;
+    return inputValue && !this.isInputValueTheCurrencySymbol(inputValue)
+      ? <number>this.autonumericInstance.getNumber()
+      : undefined;
   }
 
   /**
@@ -199,10 +196,6 @@ export class SkyAutonumericDirective
 
   private getInputValue(): string {
     return this.elementRef.nativeElement.value;
-  }
-
-  private createAutonumericInstance(): void {
-    this.autonumericInstance = new AutoNumeric(this.elementRef.nativeElement);
   }
 
   private updateAutonumericInstance(): void {
@@ -228,7 +221,7 @@ export class SkyAutonumericDirective
   }
 
   /* istanbul ignore next */
-  private onChange = (_?: number) => {};
+  private onChange = (_: number | undefined) => {};
   /* istanbul ignore next */
   private onTouched = () => {};
 }

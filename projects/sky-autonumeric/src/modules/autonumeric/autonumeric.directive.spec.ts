@@ -445,7 +445,9 @@ describe('Autonumeric directive', () => {
         valid: true,
       });
 
-      fixture.componentInstance.formGroup.get('donationAmount')!.setValue('foo');
+      fixture.componentInstance.formGroup
+        .get('donationAmount')!
+        .setValue('foo');
       fixture.componentInstance.templateDrivenModel.donationAmount = 'foo';
       detectChanges();
 
