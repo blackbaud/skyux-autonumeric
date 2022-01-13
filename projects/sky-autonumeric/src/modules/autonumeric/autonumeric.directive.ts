@@ -177,10 +177,10 @@ export class SkyAutonumericDirective
     const inputValue = this.getInputValue();
     const numericValue =
       inputValue && !this.isInputValueTheCurrencySymbol(inputValue)
-        ? this.autonumericInstance.getNumber()
+        ? <number>this.autonumericInstance.getNumber()
         : undefined;
 
-    return numericValue === null ? undefined : numericValue;
+    return numericValue;
   }
 
   /**
