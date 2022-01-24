@@ -64,10 +64,10 @@ export class SkyAutonumericDirective
   }
 
   private autonumericInstance: AutoNumeric;
-  private autonumericOptions!: SkyAutonumericOptions;
-  private control?: AbstractControl;
+  private autonumericOptions: SkyAutonumericOptions | undefined;
+  private control: AbstractControl | undefined;
   private isFirstChange = true;
-  private value?: number;
+  private value: number | undefined;
 
   private ngUnsubscribe = new Subject<void>();
 
