@@ -264,6 +264,12 @@ describe('Autonumeric directive', () => {
     expect(spy).not.toHaveBeenCalled();
   }));
 
+  it('should accommodate undefined values', fakeAsync(() => {
+    detectChanges();
+    fixture.componentInstance.formGroup = undefined;
+    expect(fixture.componentInstance.formControl).toBeFalsy();
+  }));
+
   it('should be accessible', async(() => {
     fixture.detectChanges();
 
